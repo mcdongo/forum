@@ -16,3 +16,4 @@ Käyttäjillä tulee olla oma profiili lähettääkseen viestejä.
 - Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle
 - Viestiin voi linkittää kuvia
 - Tiliin voi linkittää profiilikuvan
+- Tilillä on oma profiilisivu, josta näkee käyttäjän lähettämät viestit sekä aloittamat ketjut

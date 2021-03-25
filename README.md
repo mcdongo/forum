@@ -1,8 +1,11 @@
 Forum keskustelusovellus
 
+Sovellus on keskustelufoorumi. 
 Sovellus koostuu erilaisista keskustelualueista, jotka sisältävät ketjuja.
+Käyttäjillä tulee olla oma profiili lähettääkseen viestejä.
+
 - Käyttäjä voi luoda oman tilin sekä kirjautua sille
-- Etusivulla on jaettu eri keskustelualueisiin
+- Etusivu on jaettu eri keskustelualueisiin
 - Etusivulla näkyy jokaisen alueen ketjujen ja viestien määrä ja viimeksi lähetetyn viestin ajankohta
 - Käyttäjä void luoda ketjuja
 - Ketjuilla on otsikko sekä aloitusviesti
@@ -11,4 +14,5 @@ Sovellus koostuu erilaisista keskustelualueista, jotka sisältävät ketjuja.
 - Käyttäjä voi etsiä kaikki viestit, joiden osana on annettu sana
 - Ylläpitäjä voi lisätä ja poistaa keskustelualueita
 - Ylläpitäjä voi luoda salaisen alueen ja määrittää, keillä käyttäjillä on pääsy alueelle
-
+- Viestiin voi linkittää kuvia
+- Tiliin voi linkittää profiilikuvan

@@ -7,7 +7,7 @@ Käyttäjillä tulee olla oma profiili lähettääkseen viestejä.
 - Käyttäjä voi luoda oman tilin sekä kirjautua sille
 - Etusivu on jaettu eri keskustelualueisiin
 - Etusivulla näkyy jokaisen alueen ketjujen ja viestien määrä ja viimeksi lähetetyn viestin ajankohta
-- Käyttäjä void luoda ketjuja
+- Käyttäjä voi luoda ketjuja
 - Ketjuilla on otsikko sekä aloitusviesti
 - Käyttäjä voi lisätä viestejä valmiiksi tehtyihin ketjuihin
 - Käyttäjä voi muokata luomansa ketjun otsikkoa sekä lähettämänsä viestin sisältöä. Viestin sekä ketjun voi myös poistaa

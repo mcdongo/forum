@@ -1,0 +1,20 @@
+<!DOCTYPE hmtl>
+<title>General forum - {% block title %}{% endblock %}</title>
+<h1>General forum</h1>
+<hr>
+<a href="/">Front page</a>
+{% if session.username %} <p>You are logged in as {{ session.username }}.</p>
+<a href="/logout">Log out</a>
+{% else %}
+{{ loginValue }}
+<form action="/login" method="POST">
+Username: 
+<input type="text" name="username">
+Password: 
+<input type="password" name="password">
+<input type="submit" value="Log in">
+</form>
+<a href="/register">Register here</a>
+{% endif %}
+
+{% block content %}{% endblock %}

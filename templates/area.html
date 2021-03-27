@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% block title %}{{ area[0] }}{% endblock %}
+{% block content %}
+<h1>{{ area[1] }}</h1>
+Rules: {{ area[2] }}<br>
+{% if session.username %}
+<hr>
+<form action="/newthread" method="POST">
+Create a thread:<br>
+Topic (max 100 characters):<br>
+<textarea name="topic" rows="1" cols="40"></textarea><br>
+Message (max 1000 characters):<br>
+<textarea name="message" rows="3" cols="40"></textarea>
+<br>
+<input type="submit" value="Create">
+<input type="hidden" name="area_id" value="{{ area[0] }}">
+</form>
+{% else %}
+You need to log in to start a thread!
+{% endif %}
+<hr>
+{% for content in contents %}
+<h2><a href="/area/{{ area[0] }}/{{ content[0] }}">{{ content[1] }}</a></h2>
+Posted by {{ content[2] }}, at {{ content[3] }}
+<hr>
+{% endfor %}
+{% endblock %}

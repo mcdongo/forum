@@ -9,17 +9,17 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 def fetchAreaValues():
-    result = db.session.execute("""SELECT a.topic, COUNT(t.id), COUNT(m.id) FROM areas a LEFT JOIN threads t
-                                 ON a.listed=True AND a.id=t.area_id LEFT JOIN messages m ON m.area_id=a.id GROUP BY a.id ORDER BY a.topic""")
+    result = db.session.execute("""SELECT a.id, a.topic, COUNT(t.id), COUNT(m.id) FROM areas a LEFT JOIN threads t
+                                 ON a.id=t.area_id LEFT JOIN messages m ON m.area_id=a.id WHERE a.listed=True GROUP BY a.id ORDER BY a.topic""")
     '''last_post = db.session.execute("""SELECT m.posted_at FROM areas a LEFT JOIN messages m ON a.listed=True
                                  AND m.area_id=a.id GROUP BY m.area_id ORDER BY m.id DESC LIMIT 1""")
     last_post = last_post.fetchall()'''
     areaValues = result.fetchall()
 
-    values = []
+    '''values = []
     for i in range(len(areaValues)):
-        values.append([areaValues[i][0],areaValues[i][1],areaValues[i][2]])#,last_post[i][0]])
-    return values
+        values.append([areaValues[i][0],areaValues[i][1],areaValues[i][2]])#,last_post[i][0]])'''
+    return areaValues
 
 def register(username,password):
     hash_value = generate_password_hash(password)
@@ -44,4 +44,59 @@ def login(username,password):
             return 3
         else:
             return 2
+
+def getArea(id):
+    sql = "SELECT listed FROM areas WHERE id=:id"
+    result = db.session.execute(sql,{"id":id})
+    listed = result.fetchone()
+    if not listed[0]:
+        return False,False
+    sql = "SELECT id, topic, rules FROM areas WHERE id=:id"
+    result = db.session.execute(sql,{"id":id})
+    areaInfo = result.fetchone()
+
+    sql = "SELECT t.id, t.topic, u.username, t.posted_at FROM threads t, users u WHERE t.op_id=u.id AND t.listed=True and t.area_id=:id"
+    result = db.session.execute(sql,{"id":id})
+    contents = result.fetchall()
+    return areaInfo,contents
+
+def getId(username):
+    sql = "SELECT id FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username":username})
+    id = result.fetchone()[0]
+    return id
+
+def createThread(topic,text,area_id,user_id):
+    sql = "INSERT INTO threads (topic, message, area_id, posted_at, op_id, listed) VALUES (:topic,:text,:area_id,NOW(),:user_id,True) RETURNING id"
+    result = db.session.execute(sql, {"topic":topic,"text":text,"area_id":area_id,"user_id":user_id}).fetchone()[0]
+    db.session.commit()
+    return result
+
+def getThreadContent(thread_id):
+    sql = "SELECT listed FROM threads WHERE id=:thread_id"
+    result = db.session.execute(sql,{"thread_id":thread_id}).fetchone() #check if thread is unlisted
+    if not result:
+        return False,False
+
+    sql = "SELECT t.topic, t.message, u.username, t.posted_at FROM threads t, users u WHERE t.op_id=u.id AND t.id=:thread_id"
+    thread_info = db.session.execute(sql,{"thread_id":thread_id}).fetchone()
+    
+    sql = """SELECT m.message, u.username, m.posted_at FROM messages m, users u, threads t WHERE m.listed=True AND u.id=m.user_id
+            AND t.id=m.thread_id AND t.id=:thread_id"""
+    result = db.session.execute(sql,{"thread_id":thread_id})
+    messages = result.fetchall()
+    return thread_info,messages
+
+def getAreaName(thread_id):
+    sql = "SELECT a.topic FROM areas a, threads t WHERE t.id=:thread_id"
+    result = db.session.execute(sql, {"thread_id":thread_id}).fetchone()[0]
+    return result
+
+def saveReply(message,thread_id,area_id,user_id):
+    sql = "INSERT INTO messages (message,thread_id,area_id,user_id,posted_at,listed) VALUES (:message,:thread_id,:area_id,:user_id,NOW(),True)"
+    result = db.session.execute(sql,{"message":message,"thread_id":thread_id,"area_id":area_id,"user_id":user_id})
+    db.session.commit()
+    return True
+
+
 

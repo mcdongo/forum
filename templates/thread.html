@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% block title %}{{ area[2] }}{% endblock %}
+{% block content %}
+<a href="/area/{{ area[0] }}">{{ area[1] }}</a><br>
+<h1>{{ info[0] }}</h1>
+{{ info[1] }}<br>
+Posted by {{ info[2] }}, at {{ info[3] }}
+<hr>
+{% for content in contents %}
+{{ content[1] }} at {{ content[2] }}<br>
+{{ content[0] }}
+<hr>
+{% endfor %}
+{% if session.username %}
+<form action="/reply" method="POST">
+    Reply to thread (max 1000 characters): <br>
+    <textarea name="message" rows="5" cols="40"></textarea><br>
+    <input type="submit" value="Reply">
+    <input type="hidden" name="thread_id" value="{{ thread_id }}">
+    <input type="hidden" name="area_id" value="{{ area[0] }}">
+</form>
+{% else %}
+You need to log in to reply!
+{% endif %}
+{% endblock %}

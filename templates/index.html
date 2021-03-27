@@ -3,12 +3,10 @@
 {% block title %}Front page{% endblock %}
 {% block content %}
 <h1>Welcome to a general forum!</h1> 
-
-<hr>
 <h2>Here are all of the discussion areas:</h2>
 {% for area in areas %}
-{{ area[0] }}<br>
-{{ area[1] }} threads, {{ area[2] }} messages, last posted at: {{ area[3] }}
+<a href="/area/{{ area[0] }}"">{{ area[1] }}</a><br>
+{{ area[2] }} threads, {{ area[3] }} messages, last posted at: {{ area[4] }}
 <hr>
 {% endfor %}
 {% endblock %}

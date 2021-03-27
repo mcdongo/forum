@@ -9,16 +9,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 def fetchAreaValues():
-    result = db.session.execute("""SELECT a.id, a.topic, COUNT(t.id), COUNT(m.id) FROM areas a LEFT JOIN threads t
-                                 ON a.id=t.area_id LEFT JOIN messages m ON m.area_id=a.id WHERE a.listed=True GROUP BY a.id ORDER BY a.topic""")
-    '''last_post = db.session.execute("""SELECT m.posted_at FROM areas a LEFT JOIN messages m ON a.listed=True
-                                 AND m.area_id=a.id GROUP BY m.area_id ORDER BY m.id DESC LIMIT 1""")
-    last_post = last_post.fetchall()'''
+    result = db.session.execute("SELECT a.id, a.topic FROM areas a ORDER BY a.topic")
     areaValues = result.fetchall()
-
-    '''values = []
-    for i in range(len(areaValues)):
-        values.append([areaValues[i][0],areaValues[i][1],areaValues[i][2]])#,last_post[i][0]])'''
     return areaValues
 
 def register(username,password):

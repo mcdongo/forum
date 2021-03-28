@@ -10,5 +10,15 @@ Last message at: {{ last_message[0] }}<br>
 {{ area[3] }} threads, {{ area[2] }} messages
 <hr>
 {% endfor %}
+<h1>Add a new discussion area:</h1>
+<form action="/newarea" method="POST">
+Topic: <br>
+<textarea name="topic" rows="1" cols="40"></textarea><br>
+Rules:<br>
+<textarea name="rules" rows="5" cols="40"></textarea><br>
+Is the area listed:<input type="radio" name="listed" value="True">Yes
+<input type="radio" name="listed" value="False">No
+<input type="submit" value="Create">
+</form>
 {% endblock %}
 

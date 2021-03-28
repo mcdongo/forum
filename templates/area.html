@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% extends "layout.html" %}
-{% block title %}{{ area[0] }}{% endblock %}
+{% block title %}{{ area[1] }}{% endblock %}
 {% block content %}
 <h1>{{ area[1] }}</h1>
 Rules: {{ area[2] }}<br>
@@ -22,7 +22,7 @@ You need to log in to start a thread!
 <hr>
 {% for content in contents %}
 <h2><a href="/area/{{ area[0] }}/{{ content[0] }}">{{ content[1] }}</a></h2>
-Posted by {{ content[2] }}, at {{ content[3] }}
+Posted by <a href="/profile/{{ content[4] }}">{{ content[2] }}</a>, at {{ content[3] }}
 <hr>
 {% endfor %}
 {% endblock %}

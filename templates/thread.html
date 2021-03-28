@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 {% extends "layout.html" %}
-{% block title %}{{ area[2] }}{% endblock %}
+{% block title %}{{ info[0] }}{% endblock %}
 {% block content %}
-<a href="/area/{{ area[0] }}">{{ area[1] }}</a><br>
+<a href="/area/{{ info[5] }}">{{ info[6] }}</a>
 <h1>{{ info[0] }}</h1>
 {{ info[1] }}<br>
-Posted by {{ info[2] }}, at {{ info[3] }}
+Posted by <a href="/profile/{{ info[4] }}">{{ info[2] }}</a>, at {{ info[3] }}
 <hr>
 {% for content in contents %}
-{{ content[1] }} at {{ content[2] }}<br>
+<a href="/profile/{{ content[3] }}">{{ content[1] }}</a> at {{ content[2] }}<br>
 {{ content[0] }}
 <hr>
 {% endfor %}
@@ -18,7 +18,7 @@ Posted by {{ info[2] }}, at {{ info[3] }}
     <textarea name="message" rows="5" cols="40"></textarea><br>
     <input type="submit" value="Reply">
     <input type="hidden" name="thread_id" value="{{ thread_id }}">
-    <input type="hidden" name="area_id" value="{{ area[0] }}">
+    <input type="hidden" name="area_id" value="{{ info[5] }}">
 </form>
 {% else %}
 You need to log in to reply!

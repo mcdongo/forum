@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% block title %}{{ profile[0] }}'s profile{% endblock %}
+{% block content %}
+<h1>{{ profile[0] }}'s profile</h1><br>
+Created at {{ profile[1] }}<hr>
+{% if messages %}
+<h2>{{ profile[0] }} has posted {{ stats[0] }} message(s):</h2><hr>
+{% for message in messages %}
+{{ message[0] }}<br>
+in thread <a href="/area/{{ message[3] }}/{{ message[4] }}">{{ message[1] }}</a> at {{ message[2] }}<hr>
+{% endfor %}
+{% else %}
+<h2>{{ profile[0] }} has posted 0 messages</h2>
+<hr>
+{% endif %}
+<br>
+{% if threads %}
+<h2>{{ profile[0] }} has started {{ stats[1] }} thread(s):</h2><hr>
+{% for thread in threads %}
+<a href="/area/{{ thread[3] }}/{{ thread[4] }}">{{ thread[0] }}</a> in <a href="/area/{{ thread[3] }}">{{ thread[1] }}</a> at {{ thread[2] }}<hr>
+{% endfor %}
+{% else %}
+<h2>{{ profile[0] }} has not started any threads</h2>
+{% endif %}
+{% endblock %}

@@ -4,11 +4,11 @@
 <hr>
 {{ value }}
 
-<form action="/registration" method="POST">
+<form action="/register" method="POST">
     <p>Username:
     <input type="text" name="username"></p>
     <p>Password: 
     <input type="password" name="password"></p>
     <input type="submit" value="Register and log in">
 </form>
-<a href="/">Return</a>
+<a href="{{ next_url }}">Return</a>

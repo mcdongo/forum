@@ -3,7 +3,7 @@
 <h1>General forum</h1>
 <hr>
 <a href="/">Front page</a>
-{% if session.username %} <p>You are logged in as {{ session.username }}.</p>
+{% if session.username %} <p>You are logged in as <a href="/profile/{{ session.user_id }}">{{ session.username }}</a>.</p>
 <a href="/logout">Log out</a>
 {% else %}
 {{ loginValue }}

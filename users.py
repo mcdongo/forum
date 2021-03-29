@@ -10,7 +10,7 @@ def login(username,password):
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()
     if user == None: #account does not exist
-        return 1
+        return "Account does not exist!"
     else:
         hash_value = user[0]
         if check_password_hash(hash_value,password): #succesful login
@@ -18,7 +18,7 @@ def login(username,password):
             session["user_id"] = getId(username)
             return 3
         else: #wrong password
-            return 2 
+            return "Wrong password!"
 
 def logout():
     del session["username"], session["user_id"]

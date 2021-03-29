@@ -4,12 +4,15 @@ import users, areas, threads
 
 @app.route("/")
 def index():
-    area_list,last_message = areas.fetchAreaValues()
+    area_list,last_message,total_messages,total_threads = areas.fetchAreaValues()
+    active_threads = areas.getActiveThreads(0)
     if "user_id" in session:
         if users.getAdmin(session["user_id"]):
-            return render_template("indexAdmin.html",areas=area_list,last_message=last_message)
+            return render_template("indexAdmin.html",areas=area_list,last_message=last_message,
+                                    threads=active_threads,total_messages=total_messages,total_threads=total_threads)
     session["url"] = url_for("index")
-    return render_template("index.html",areas=area_list,last_message=last_message)
+    return render_template("index.html",areas=area_list,last_message=last_message,threads=active_threads,total_messages=total_messages,
+                            total_threads=total_threads)
 
 @app.route("/login", methods=["POST"])
 def login():
@@ -17,19 +20,10 @@ def login():
     password = request.form["password"]
     status = users.login(username,password)
     if status != 3: #unsuccesful login
-        return redirect(url_for("loginFailed",loginValue=status))
+        return render_template("error.html",message=status)
     if "url" in session: #return to previous page
         return redirect(session["url"])
     return redirect("/") #succesful login
-
-@app.route("/<int:loginValue>")
-def loginFailed(loginValue):
-    area_list = areas.fetchAreaValues()
-    if loginValue == 1: #account does not exist
-        message = "Account does not exist!"
-    if loginValue == 2: #wrong password
-        message = "Wrong password!"
-    return render_template("index.html",areas=area_list,loginValue=message)
 
 @app.route("/logout")
 def logout():
@@ -67,8 +61,9 @@ def area(id):
     if not areas.checkIfListed(id):
         abort(404)
     area, contents = areas.getThreads(id)
+    active_threads = areas.getActiveThreads(id)
     session["url"] = url_for("area",id=id)
-    return render_template("area.html",area=area,contents=contents)
+    return render_template("area.html",area=area,contents=contents,threads=active_threads)
 
 @app.route("/area/<int:area_id>/<int:thread_id>")
 def thread(area_id,thread_id):
@@ -87,7 +82,7 @@ def newThread():
     user_id = session["user_id"]
     area_id = request.form["area_id"]
     if len(topic) > 100 or len(message) > 1000:
-        return redirect("/area/{0}".format(area_id))
+        return render_template("error.html",message="Topic or message too long!")
 
     thread_id = areas.createThread(topic,message,area_id,user_id)
 
@@ -103,8 +98,7 @@ def replytoThread():
     user_id = session["user_id"]
 
     if len(message) > 1000:
-        return redirect("/area/{0}/{1}".format(area_id,thread_id))
-
+        return render_template("error.html",message="Message too long!")
     threads.saveReply(message,thread_id,area_id,user_id)
     return redirect("/area/{0}/{1}".format(area_id,thread_id))
 
@@ -128,3 +122,11 @@ def newArea():
             return redirect("/")
     else:
         abort(403)
+
+@app.route("/result", methods=["GET"])
+def result():
+    query = request.args["query"]
+    if len(query) < 3:
+        return render_template("error.html",message="Search text too short")
+    threads,messages,profiles = areas.search(query)
+    return render_template("result.html",threads=threads,messages=messages,query=query,profiles=profiles)

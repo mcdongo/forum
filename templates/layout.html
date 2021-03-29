@@ -17,4 +17,7 @@ Password:
 <a href="/register">Register here</a>
 {% endif %}
 <hr>
+<form action="/result" method="GET">
+Search: <input type="text" name="query", value="{{ query }}">
+<input type="submit" value="Go"></form>
 {% block content %}{% endblock %}

@@ -5,20 +5,39 @@ def fetchAreaValues():
     sql = """SELECT a.id, a.topic, COUNT(m.id) FROM areas a LEFT JOIN messages m ON a.listed=True
                                 AND m.area_id=a.id AND m.listed=True GROUP BY a.id ORDER BY a.topic"""
     result = db.session.execute(sql).fetchall()
-    print(result)
 
     sql = """SELECT COUNT(t.id) FROM areas a LEFT JOIN threads t ON a.listed=True AND t.area_id=a.id AND t.listed=True GROUP BY a.id
             ORDER BY a.topic"""
     threads = db.session.execute(sql).fetchall()
-    print(threads)
     
     sql = """SELECT TO_CHAR(m.posted_at, 'YYYY-MM-DD HH24:MI:SS') AS t FROM messages m, areas a WHERE a.listed=True AND m.listed=True
             ORDER BY t DESC LIMIT 1"""
     last_message = db.session.execute(sql).fetchone()
+
+    sql = "SELECT COUNT(m.id) FROM messages m WHERE m.listed=True"
+    total_messages = db.session.execute(sql).fetchone()
+
+    sql = "SELECT COUNT(t.id) FROM threads t WHERE t.listed=True"
+    total_threads = db.session.execute(sql).fetchone()
+
     areaValues = []
     for i in range(len(result)):
         areaValues.append([result[i][0],result[i][1],result[i][2],threads[i][0]])
-    return areaValues,last_message
+    return areaValues,last_message,total_messages,total_threads
+
+def getActiveThreads(area_id=0):
+    if area_id == 0:
+        sql = """SELECT DISTINCT ON (t.id) t.id, t.topic, t.posted_at, t.area_id, a.topic, TO_CHAR(m.posted_at, 'YYYY-MM-DD HH24:MI:SS') AS p FROM threads t, messages m,
+                areas a WHERE t.listed=True AND m.listed=True AND m.thread_id=t.id AND a.id=t.area_id ORDER BY t.id DESC, p DESC LIMIT 10
+                """
+        active_threads = db.session.execute(sql).fetchall()
+    else:
+        sql = """SELECT DISTINCT ON (t.id) t.id, t.topic, t.area_id, TO_CHAR(m.posted_at, 'YYYY-MM-DD HH24:MI:SS') AS p, t.op_id, u.username
+                FROM threads t, messages m, areas a, users u WHERE t.listed=True AND m.listed=True and m.thread_id=t.id AND a.id=t.area_id
+                AND a.id=:id AND u.id=t.op_id ORDER BY t.id DESC, p DESC LIMIT 10"""
+        active_threads = db.session.execute(sql,{"id":area_id}).fetchall()
+    return active_threads
+
 
 def getThreads(area_id): #get threads in an area
     sql = "SELECT id, topic, rules FROM areas WHERE id=:id"
@@ -47,3 +66,18 @@ def addArea(topic,rules,listed):
     result = db.session.execute(sql,{"topic":topic,"rules":rules,"listed":listed}).fetchone()[0]
     db.session.commit()
     return result
+
+def search(query):
+    sql = """SELECT t.area_id, t.id, t.topic, t.message, TO_CHAR(t.posted_at, 'YYYY-MM-DD HH24:MI-SS'), u.username, u.id, a.topic
+            FROM threads t, users u, areas a WHERE (t.topic LIKE :query OR t.message LIKE :query OR u.username LIKE :query)
+            AND t.op_id=u.id AND t.listed=True AND a.id=t.area_id ORDER BY t.id DESC"""
+    threads = db.session.execute(sql,{"query":"%"+query+"%"}).fetchall()
+
+    sql = """SELECT u.id, u.username, t.area_id, t.id, a.topic, m.message, TO_CHAR(m.posted_at, 'YYYY-MM-DD HH24:MI:SS'), t.topic
+            FROM users u, threads t, areas a, messages m WHERE (m.message LIKE :query OR u.username LIKE :query)
+            AND u.id=m.user_id AND m.thread_id=t.id AND t.area_id=a.id AND t.listed=True AND m.listed=True ORDER BY m.id DESC"""
+    messages = db.session.execute(sql,{"query":"%"+query+"%"}).fetchall()
+
+    sql = """SELECT id, username FROM users WHERE username LIKE :query ORDER BY id DESC"""
+    profiles = db.session.execute(sql, {"query":"%"+query+"%"}).fetchall()
+    return threads, messages, profiles

@@ -20,6 +20,13 @@ Message (max 1000 characters):<br>
 You need to log in to start a thread!
 {% endif %}
 <hr>
+<h1>Active threads:</h1>
+<hr>
+{% for thread in threads %}
+<h2><a href="/area/{{ thread[3] }}/{{ thread[0] }}">{{ thread[1] }}</a></h2>
+Last message at: {{ thread[3] }}<br>
+{% endfor %}
+<h1>All threads:</h1>
 {% for content in contents %}
 <h2><a href="/area/{{ area[0] }}/{{ content[0] }}">{{ content[1] }}</a></h2>
 Posted by <a href="/profile/{{ content[4] }}">{{ content[2] }}</a>, at {{ content[3] }}

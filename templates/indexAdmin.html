@@ -4,11 +4,17 @@
 {% block content %}
 <h1>Welcome to a general forum!</h1> 
 <h2>Here are all of the discussion areas:</h2>
-Last message at: {{ last_message[0] }}<br>
+Last message at: {{ last_message[0] }}, total of {{ total_messages[0] }} messages sent and {{ total_threads[0] }} threads started!<br>
 {% for area in areas %}
 <a href="/area/{{ area[0] }}"">{{ area[1] }}</a><br>
 {{ area[3] }} threads, {{ area[2] }} messages
 <hr>
+{% endfor %}
+<h1>Active threads: </h1>
+<hr>
+{% for thread in threads %}
+<h2><a href="/area/{{ thread[3] }}/{{ thread[0] }}">{{ thread[1] }}</a></h2>
+Last message at: {{ thread[5] }} in <a href="/area/{{ thread[3] }}">{{ thread[4] }}</a><hr>
 {% endfor %}
 <h1>Add a new discussion area:</h1>
 <form action="/newarea" method="POST">
@@ -16,7 +22,7 @@ Topic: <br>
 <textarea name="topic" rows="1" cols="40"></textarea><br>
 Rules:<br>
 <textarea name="rules" rows="5" cols="40"></textarea><br>
-Is the area listed:<input type="radio" name="listed" value="True">Yes
+Is the area listed:<input type="radio" name="listed" value="True" checked>Yes
 <input type="radio" name="listed" value="False">No
 <input type="submit" value="Create">
 </form>

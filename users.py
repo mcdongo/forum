@@ -16,6 +16,8 @@ def login(username,password):
         if check_password_hash(hash_value,password): #succesful login
             session["username"] = username
             session["user_id"] = getId(username)
+            if getAdmin(int(session["user_id"])):
+                session["admin"] = True
             return 3
         else: #wrong password
             return "Wrong password!"
@@ -46,7 +48,7 @@ def getAdmin(id):
     return result
 
 def checkLoggedInStatus():
-    if session["user_id"] != None:
+    if "user_id" in session:
         return True
     return False
 

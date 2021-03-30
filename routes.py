@@ -130,3 +130,72 @@ def result():
         return render_template("error.html",message="Search text too short")
     threads,messages,profiles = areas.search(query)
     return render_template("result.html",threads=threads,messages=messages,query=query,profiles=profiles)
+
+@app.route("/editthread/<int:id>", methods=["GET","POST"])
+def editThread(id):
+    if "user_id" not in session:
+        return render_template("error.html", message="You need to log in to edit a thread.")
+
+    if request.method == "GET":
+        thread_info, content = threads.getThreadContent(id)
+        if threads.checkThreadOwner(id, int(session["user_id"])):
+            return render_template("editthread.html",info=thread_info)
+        else:
+            return render_template("error.html", message="You can't edit someone else's thread!")
+    
+    if request.method == "POST":
+        if "user_id" not in session:
+            abort(403)
+        message = request.form["message"]
+        
+        if len(message) > 1000:
+            return render_template("error.html", message="Message too long! (over 1000 characters)")
+        if threads.editThread(id,int(session["user_id"]),message):
+            if "url" in session:
+                return redirect(session["url"])
+            else:
+                return redirect("/")
+        else:
+            abort(403)
+
+@app.route("/deletethread/<int:area_id>/<int:thread_id>")
+def deleteThread(area_id,thread_id):
+    if "user_id" not in session:
+        return render_template("error.html", message="You need to log in to delete a thread.")
+    if threads.deleteThread(thread_id, int(session["user_id"])):
+        return redirect("/area/{0}".format(area_id))
+    abort(403)
+
+@app.route("/editmessage/<int:id>", methods=["GET","POST"])
+def editMessage(id):
+    if "user_id" not in session:
+        return render_template("error.html", message="You need to log in to edit a message.")
+    
+    if request.method == "GET":
+        message_info = threads.getMessageContent(id)
+        if threads.checkMessageOwner(id, int(session["user_id"])):
+            return render_template("editmessage.html", info=message_info)
+        else:
+            return render_template("error.html", message="You can't edit someone else's message!")
+
+    if request.method == "POST":
+        message = request.form["message"]
+        if len(message) > 1000:
+            return render_template("error.html", message="Message too long! (Over 1000 characters)")
+        if threads.editMessage(id, int(session["user_id"]), message):
+            if "url" in session:
+                return redirect(session["url"])
+            else:
+                return redirect("/")
+        else:
+            abort(403)
+
+
+@app.route("/deletemessage/<int:area_id>/<int:thread_id>/<int:message_id>")
+def deleteMessage(area_id,thread_id,message_id):
+    if "user_id" not in session:
+        return render_template("error.html", message="You need to log in to delete a message.")
+    if threads.deleteMessage(message_id, int(session["user_id"])):
+        return redirect("/area/{0}/{1}".format(area_id, thread_id))
+    else:
+        abort(403)

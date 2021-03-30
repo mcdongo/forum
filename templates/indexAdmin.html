@@ -13,8 +13,8 @@ Last message at: {{ last_message[0] }}, total of {{ total_messages[0] }} message
 <h1>Active threads: </h1>
 <hr>
 {% for thread in threads %}
-<h2><a href="/area/{{ thread[3] }}/{{ thread[0] }}">{{ thread[1] }}</a></h2>
-Last message at: {{ thread[5] }} in <a href="/area/{{ thread[3] }}">{{ thread[4] }}</a><hr>
+<a href="/area/{{ thread[2] }}/{{ thread[0] }}">{{ thread[1] }}</a>
+Recent message in <a href="/area/{{ thread[2] }}">{{ thread[3] }}</a> at {{ thread[5] }}<hr>
 {% endfor %}
 <h1>Add a new discussion area:</h1>
 <form action="/newarea" method="POST">

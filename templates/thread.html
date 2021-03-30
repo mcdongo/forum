@@ -6,9 +6,16 @@
 <h1>{{ info[0] }}</h1>
 {{ info[1] }}<br>
 Posted by <a href="/profile/{{ info[4] }}">{{ info[2] }}</a>, at {{ info[3] }}
+{% if session.user_id==info[4] %}
+<a href="/editthread/{{ info[7] }}">Edit</a>, <a href="/deletethread/{{ info[5] }}/{{ info[7] }}">delete</a>
+{% endif %}
 <hr>
 {% for content in contents %}
-<a href="/profile/{{ content[3] }}">{{ content[1] }}</a> at {{ content[2] }}<br>
+<a href="/profile/{{ content[3] }}">{{ content[1] }}</a> at {{ content[2] }} 
+{% if session.user_id==content[3] %}
+<a href="/editmessage/{{ content[4] }}">Edit</a>, <a href="/deletemessage/{{ info[5] }}/{{ info[7] }}/{{ content[4] }}">delete</a>
+{% endif %}
+<br> 
 {{ content[0] }}
 <hr>
 {% endfor %}

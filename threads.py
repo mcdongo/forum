@@ -35,16 +35,18 @@ def checkThreadOwner(thread_id,user_id):
     result = db.session.execute(sql, {"thread_id":thread_id}).fetchone()[0]
     return result==user_id
 
-def editThread(thread_id,user_id,message):
-    if not checkThreadOwner(thread_id,user_id):
+def editThread(thread_id,user_id,message, topic):
+    if not (checkThreadOwner(thread_id,user_id) or users.getAdmin(user_id)):
         return False
     sql = "UPDATE threads SET message=:message WHERE id=:thread_id"
     result = db.session.execute(sql, {"message":message,"thread_id":thread_id})
+    sql = "UPDATE threads SET topic=:topic WHERE id=:thread_id"
+    result = db.session.execute(sql, {"topic":topic,"thread_id":thread_id})
     db.session.commit()
     return True
     
 def deleteThread(thread_id,user_id):
-    if not checkThreadOwner(thread_id,user_id):
+    if not (checkThreadOwner(thread_id,user_id) or users.getAdmin(user_id)):
         return False
     sql = "UPDATE messages SET listed=False WHERE thread_id=:thread_id"
     result = db.session.execute(sql,{"thread_id":thread_id})
@@ -64,7 +66,7 @@ def getMessageContent(message_id):
     return result
 
 def editMessage(message_id,user_id,message):
-    if not checkMessageOwner(message_id,user_id):
+    if not (checkMessageOwner(message_id,user_id) or users.getAdmin(user_id)):
         return False
     sql = "UPDATE messages SET message=:message WHERE id=:message_id"
     result = db.session.execute(sql, {"message_id":message_id,"message":message})
@@ -72,7 +74,7 @@ def editMessage(message_id,user_id,message):
     return True
 
 def deleteMessage(message_id,user_id):
-    if not checkMessageOwner(message_id,user_id):
+    if not (checkMessageOwner(message_id,user_id) or users.getAdmin(user_id)):
         return False
     sql = "UPDATE messages SET listed=False WHERE id=:message_id"
     result = db.session.execute(sql, {"message_id":message_id})

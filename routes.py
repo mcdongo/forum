@@ -21,40 +21,33 @@ def login():
     status = users.login(username,password)
     if status != 3: #unsuccesful login
         return render_template("error.html",message=status)
-    if "url" in session: #return to previous page
-        return redirect(session["url"])
-    return redirect("/") #succesful login
+
+    return redirect(session.get("url","/"))
 
 @app.route("/logout")
 def logout():
     users.logout()
-    if "url" in session:
-        return redirect(session["url"]) #return to previous page
-    return redirect("/")
+    return redirect(session.get("url","/"))
 
 @app.route("/register", methods=["GET","POST"])
 def register():
     if request.method == "GET":
-        next_url = "/"
-        if "url" in session: 
-            next_url = session["url"] #return to previous page 
+        next_url = session.get("url","/")#return to previous page 
         return render_template("register.html",next_url=next_url)
 
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        if username == "" or password == "":
+            return redirect("/registrationfailed")
         if users.register(username,password):
-            if "url" in session:
-                return redirect(session["url"]) #return to previous page
-            return redirect("/")
+            return redirect(session.get("url","/"))
         return redirect("/registrationfailed")
 
 @app.route("/registrationfailed")
 def registrationFailed():
-    next_url = "/"
-    if "url" in session:
-        next_url = session["url"]
-    return render_template("register.html",value="Username already exists.",next_url=next_url)
+    next_url = session.get("url","/")
+    return render_template("register.html",value="Registration failed",next_url=next_url)
 
 @app.route("/area/<int:id>")
 def area(id):
@@ -138,7 +131,7 @@ def editThread(id):
 
     if request.method == "GET":
         thread_info, content = threads.getThreadContent(id)
-        if threads.checkThreadOwner(id, int(session["user_id"])):
+        if threads.checkThreadOwner(id, int(session["user_id"])) or session.get("admin",False):
             return render_template("editthread.html",info=thread_info)
         else:
             return render_template("error.html", message="You can't edit someone else's thread!")
@@ -147,14 +140,14 @@ def editThread(id):
         if "user_id" not in session:
             abort(403)
         message = request.form["message"]
+        topic = request.form["topic"]
         
         if len(message) > 1000:
             return render_template("error.html", message="Message too long! (over 1000 characters)")
-        if threads.editThread(id,int(session["user_id"]),message):
-            if "url" in session:
-                return redirect(session["url"])
-            else:
-                return redirect("/")
+        if len(topic) > 1000:
+            return render_template("error.html", message="Topci too long! (over 100 characters)")
+        if threads.editThread(id, int(session["user_id"]), message, topic):
+            return redirect(session.get("url","/"))
         else:
             abort(403)
 
@@ -173,7 +166,7 @@ def editMessage(id):
     
     if request.method == "GET":
         message_info = threads.getMessageContent(id)
-        if threads.checkMessageOwner(id, int(session["user_id"])):
+        if (threads.checkMessageOwner(id, int(session["user_id"])) or users.getAdmin(session["user_id"])):
             return render_template("editmessage.html", info=message_info)
         else:
             return render_template("error.html", message="You can't edit someone else's message!")
@@ -183,10 +176,7 @@ def editMessage(id):
         if len(message) > 1000:
             return render_template("error.html", message="Message too long! (Over 1000 characters)")
         if threads.editMessage(id, int(session["user_id"]), message):
-            if "url" in session:
-                return redirect(session["url"])
-            else:
-                return redirect("/")
+            return redirect(session.get("url","/"))
         else:
             abort(403)
 
@@ -199,3 +189,27 @@ def deleteMessage(area_id,thread_id,message_id):
         return redirect("/area/{0}/{1}".format(area_id, thread_id))
     else:
         abort(403)
+
+@app.route("/editarea/<int:id>", methods=["GET","POST"])
+def editArea(id):
+    if "user_id" in session:
+        if not users.getAdmin(session["user_id"]):
+            abort(403)
+    else:
+        return render_template("error.html", message="You need to log in first")
+
+    area_info = areas.areaInfo(id)
+    if request.method == "GET":
+        return render_template("editarea.html", info=area_info)
+
+    if request.method == "POST":
+        if not users.getAdmin(session["user_id"]):
+            abort(403)
+        topic = request.form["topic"]
+        rules = request.form["rules"]
+        listed = request.form["listed"]
+
+        areas.editArea(topic,rules,listed,id)
+    if listed == "False":
+        return redirect("/")
+    return redirect(session.get("url","/"))

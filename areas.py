@@ -90,3 +90,15 @@ def search(query):
     sql = """SELECT id, username FROM users WHERE username LIKE :query ORDER BY id DESC"""
     profiles = db.session.execute(sql, {"query":"%"+query+"%"}).fetchall()
     return threads, messages, profiles
+
+def areaInfo(area_id):
+    sql = "SELECT a.id, a.topic, a.rules FROM areas a WHERE id=:area_id"
+    result = db.session.execute(sql, {"area_id":area_id}).fetchone()
+    print(result)
+    return result
+
+def editArea(topic,rules,listed,id):
+    sql = "UPDATE areas SET topic=:topic, rules=:rules, listed=:listed WHERE id=:id"
+    result = db.session.execute(sql, {"topic":topic, "rules":rules, "listed":listed, "id":id})
+    db.session.commit()
+    return

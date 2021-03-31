@@ -23,6 +23,8 @@ def login(username,password):
             return "Wrong password!"
 
 def logout():
+    if "admin" in session:
+        del session["admin"]
     del session["username"], session["user_id"]
 
 def register(username,password):

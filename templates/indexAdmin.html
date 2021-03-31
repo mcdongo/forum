@@ -7,7 +7,7 @@
 Last message at: {{ last_message[0] }}, total of {{ total_messages[0] }} messages sent and {{ total_threads[0] }} threads started!<br>
 {% for area in areas %}
 <a href="/area/{{ area[0] }}"">{{ area[1] }}</a><br>
-{{ area[3] }} threads, {{ area[2] }} messages
+{{ area[3] }} threads, {{ area[2] }} messages, <a href=/editarea/{{ area[0] }}>Edit</a>
 <hr>
 {% endfor %}
 <h1>Active threads: </h1>

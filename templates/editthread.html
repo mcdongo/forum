@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 {% extends "layout.html" %}
-{% block title %}Edit thread {{ info[0] }}{% endblock %}
+{% block title %}Edit thread {{ info[1] }}{% endblock %}
 {% block content %}
 {% if session.url %}<a href="{{ session.url }}">Return</a>{% endif %}
-<h1>Edit thread "{{ info[0] }}"</h1>
+<h1>Edit area "{{ info[1] }}"</h1>
 <form action="/editthread/{{ info[7] }}" method="POST">
+    <textarea name="topic" rows="1" cols="40">{{ info[0] }}</textarea><br>
     <textarea name="message" rows="5" cols="40">{{ info[1] }}</textarea>
     <input type="submit" value="Edit">
 </form>

@@ -7,7 +7,8 @@
 {{ info[1] }}<br>
 Posted by <a href="/profile/{{ info[4] }}">{{ info[2] }}</a>, at {{ info[3] }}
 {% if (session.user_id==info[4] or session.admin) %}
-<a href="/editthread/{{ info[7] }}">Edit</a>, <a href="/deletethread/{{ info[5] }}/{{ info[7] }}">delete</a>
+<a href="/editthread/{{ info[7] }}">Edit</a>, 
+<a href="/deletethread/{{ info[5] }}/{{ info[7] }}" onclick="return confirm('Are you sure?')">delete</a>
 {% endif %}
 <hr>
 {% for content in contents %}
@@ -20,14 +21,29 @@ Posted by <a href="/profile/{{ info[4] }}">{{ info[2] }}</a>, at {{ info[3] }}
 <hr>
 {% endfor %}
 {% if session.username %}
-<form action="/reply" method="POST">
+<form action="/reply" method="POST" onsubmit="return check(this)">
     Reply to thread (max 1000 characters): <br>
     <textarea name="message" rows="5" cols="40"></textarea><br>
     <input type="submit" value="Reply">
     <input type="hidden" name="thread_id" value="{{ thread_id }}">
     <input type="hidden" name="area_id" value="{{ info[5] }}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 {% else %}
 You need to log in to reply!
 {% endif %}
+
+<script>
+function check(form) {
+    if (form.message.value.length > 1000) {
+        alert("Message is too long!")
+        return false
+    }
+    if (form.message.value.length == 0) {
+        alert("You need to write a message!")
+        return false
+    }
+    return true
+}
+</script>
 {% endblock %}

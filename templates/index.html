@@ -1,7 +1,8 @@
-<!DOCTPYE html>
+<!DOCTYPE html>
 {% extends "layout.html" %}
 {% block title %}Front page{% endblock %}
 {% block content %}
+<body>
 <h1>Welcome to a general forum!</h1> 
 <h2>Here are all of the discussion areas:</h2>
 Last message at: {{ last_message[0] }}<br>
@@ -17,5 +18,5 @@ Total of {{ total_messages[0] }} messages sent and {{ total_threads[0] }} thread
 <a href="/area/{{ thread[2] }}/{{ thread[0] }}">{{ thread[1] }}</a>
 Recent message in <a href="/area/{{ thread[2] }}">{{ thread[3] }}</a> at {{ thread[5] }}<hr>
 {% endfor %}
-{% endblock %}
-
+</body>
+{% endblock %} 

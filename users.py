@@ -2,6 +2,7 @@ from app import app
 from db import db
 from routes import session
 from werkzeug.security import check_password_hash, generate_password_hash
+from os import urandom
 #everything session and account-related
 
 def login(username,password):
@@ -16,6 +17,7 @@ def login(username,password):
         if check_password_hash(hash_value,password): #succesful login
             session["username"] = username
             session["user_id"] = getId(username)
+            session["csrf_token"] = urandom(16).hex()
             if getAdmin(int(session["user_id"])):
                 session["admin"] = True
             return 3
@@ -25,7 +27,7 @@ def login(username,password):
 def logout():
     if "admin" in session:
         del session["admin"]
-    del session["username"], session["user_id"]
+    del session["username"], session["user_id"], session["csrf_token"]
 
 def register(username,password):
     hash_value = generate_password_hash(password)
@@ -87,3 +89,6 @@ def checkIfExists(id):
     if result:
         return True
     return False
+
+def checkCsrfToken(token):
+    return session["csrf_token"] == token

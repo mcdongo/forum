@@ -70,12 +70,15 @@ def thread(area_id,thread_id):
 def newThread():
     if not users.checkLoggedInStatus(): #check if user has logged in -> is allowed to post
         abort(403)
+    if not users.checkCsrfToken(request.form["csrf_token"]):
+        abort(403)
+
     topic = request.form["topic"]
     message = request.form["message"]
     user_id = session["user_id"]
     area_id = request.form["area_id"]
-    if len(topic) > 100 or len(message) > 1000:
-        return render_template("error.html",message="Topic or message too long!")
+    if len(topic) > 100 or len(message) > 1000 or len(topic) == 0: 
+        return render_template("error.html",message="Invalid topic or message!")
 
     thread_id = areas.createThread(topic,message,area_id,user_id)
 
@@ -85,13 +88,16 @@ def newThread():
 def replytoThread():
     if not users.checkLoggedInStatus(): #check if user has logged in -> is allowed to post
         abort(403)
+    if not users.checkCsrfToken(request.form["csrf_token"]):
+        abort(403)
+
     message = request.form["message"]
     thread_id = request.form["thread_id"]
     area_id = request.form["area_id"]
     user_id = session["user_id"]
 
-    if len(message) > 1000:
-        return render_template("error.html",message="Message too long!")
+    if len(message) > 1000 or len(message) == 0:
+        return render_template("error.html",message="Invalid message")
     threads.saveReply(message,thread_id,area_id,user_id)
     return redirect("/area/{0}/{1}".format(area_id,thread_id))
 
@@ -105,6 +111,8 @@ def profile(id):
 
 @app.route("/newarea", methods=["POST"])
 def newArea():
+    if not users.checkCsrfToken(request.form["csrf_token"]):
+        abort(403)
     if "user_id" in session:
         if users.getAdmin(session["user_id"]):
             topic = request.form["topic"]
@@ -139,13 +147,16 @@ def editThread(id):
     if request.method == "POST":
         if "user_id" not in session:
             abort(403)
+        if not users.checkCsrfToken(request.form["csrf_token"]):
+            abort(403)
+
         message = request.form["message"]
         topic = request.form["topic"]
         
         if len(message) > 1000:
             return render_template("error.html", message="Message too long! (over 1000 characters)")
-        if len(topic) > 1000:
-            return render_template("error.html", message="Topci too long! (over 100 characters)")
+        if len(topic) > 100 or len(topic) == 0:
+            return render_template("error.html", message="Invalid topic! (empty or over 100 characters)")
         if threads.editThread(id, int(session["user_id"]), message, topic):
             return redirect(session.get("url","/"))
         else:
@@ -172,6 +183,8 @@ def editMessage(id):
             return render_template("error.html", message="You can't edit someone else's message!")
 
     if request.method == "POST":
+        if not users.checkCsrfToken(request.form["csrf_token"]):
+            abort(403)
         message = request.form["message"]
         if len(message) > 1000:
             return render_template("error.html", message="Message too long! (Over 1000 characters)")
@@ -205,6 +218,9 @@ def editArea(id):
     if request.method == "POST":
         if not users.getAdmin(session["user_id"]):
             abort(403)
+        if not users.checkCsrfToken(request.form["csrf_token"]):
+            abort(403)
+            
         topic = request.form["topic"]
         rules = request.form["rules"]
         listed = request.form["listed"]

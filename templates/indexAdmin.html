@@ -24,6 +24,7 @@ Rules:<br>
 <textarea name="rules" rows="5" cols="40"></textarea><br>
 Is the area listed:<input type="radio" name="listed" value="True" checked>Yes
 <input type="radio" name="listed" value="False">No
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 <input type="submit" value="Create">
 </form>
 {% endblock %}

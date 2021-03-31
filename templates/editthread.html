@@ -4,9 +4,28 @@
 {% block content %}
 {% if session.url %}<a href="{{ session.url }}">Return</a>{% endif %}
 <h1>Edit area "{{ info[1] }}"</h1>
-<form action="/editthread/{{ info[7] }}" method="POST">
+<form action="/editthread/{{ info[7] }}" method="POST" onsubmit="return check(this)">
     <textarea name="topic" rows="1" cols="40">{{ info[0] }}</textarea><br>
     <textarea name="message" rows="5" cols="40">{{ info[1] }}</textarea>
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Edit">
 </form>
+
+<script>
+    function check(form) {
+        if (form.message.value.length > 1000) {
+            alert("Message is too long!")
+            return false
+        }
+        if (form.topic.value.length > 100) {
+            alert("Topic is too long!")
+            return false
+        }
+        if (form.topic.value.length == 0) {
+            alert("You need to write a topic!")
+            return false
+        }
+        return true
+    }
+    </script>
 {% endblock %}

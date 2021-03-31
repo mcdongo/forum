@@ -6,7 +6,7 @@
 Rules: {{ area[2] }}<br>
 {% if session.username %}
 <hr>
-<form action="/newthread" method="POST">
+<form action="/newthread" method="POST" onsubmit="return check(this)">
 Create a thread:<br>
 Topic (max 100 characters):<br>
 <textarea name="topic" rows="1" cols="40"></textarea><br>
@@ -15,6 +15,7 @@ Message (max 1000 characters):<br>
 <br>
 <input type="submit" value="Create">
 <input type="hidden" name="area_id" value="{{ area[0] }}">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 </form>
 {% else %}
 You need to log in to start a thread!
@@ -32,4 +33,23 @@ Recent message at {{ thread[5] }}<hr>
 Posted by <a href="/profile/{{ content[4] }}">{{ content[2] }}</a>, at {{ content[3] }}
 <hr>
 {% endfor %}
+
+<script>
+function check(form) {
+    if (form.topic.value.length > 100) {
+        alert("Topic is too long!")
+        return false
+    }
+    if (form.message.value.length > 1000) {
+        alert("Message is too long!")
+        return false
+    }
+    if (form.topic.value.length == 0) {
+        alert("You need to write a topic!")
+        return false
+    }
+    return true
+    }
+</script>
+
 {% endblock %}

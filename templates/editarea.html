@@ -10,6 +10,7 @@
     Listed: 
     <input type="radio" name="listed" value="True" checked>Yes
     <input type="radio" name="listed" value="False">No
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Edit">
 </form>
 {% endblock %}

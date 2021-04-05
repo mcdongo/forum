@@ -59,16 +59,25 @@ def getThreads(area_id): #get threads in an area
     contents = result.fetchall()
     return areaInfo,contents
 
-def createThread(topic,text,area_id,user_id):
+def createThread(topic,text,area_id,user_id,img_id=None):
+    if img_id:
+        sql = """INSERT INTO threads (topic, message, area_id, posted_at, op_id, listed, image_id) VALUES
+                (:topic,:text,:area_id,NOW(),:user_id,True,:image_id) RETURNING id"""
+        result = db.session.execute(sql, {"topic":topic,"text":text,"area_id":area_id,"user_id":user_id,"image_id":img_id}).fetchone()[0]
+        db.session.commit()
+        return result
     sql = "INSERT INTO threads (topic, message, area_id, posted_at, op_id, listed) VALUES (:topic,:text,:area_id,NOW(),:user_id,True) RETURNING id"
     result = db.session.execute(sql, {"topic":topic,"text":text,"area_id":area_id,"user_id":user_id}).fetchone()[0]
     db.session.commit()
     return result
 
 def checkIfListed(area_id):
-    sql = "SELECT listed FROM areas WHERE id=:id"
-    result = db.session.execute(sql,{"id":area_id}).fetchone()[0]
-    return result
+    try:
+        sql = "SELECT listed FROM areas WHERE id=:id"
+        result = db.session.execute(sql,{"id":area_id}).fetchone()[0]
+        return result
+    except Exception:
+        return None
 
 def addArea(topic,rules,listed):
     sql = "INSERT INTO areas (topic, rules, listed) VALUES (:topic, :rules, :listed) RETURNING id"

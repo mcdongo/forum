@@ -1,3 +1,8 @@
+CREATE TABLE images (
+    id SERIAL PRIMARY KEY,
+    data BYTEA,
+    listed BOOLEAN
+);
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
@@ -5,7 +10,7 @@ CREATE TABLE users (
     password TEXT,
     created_at TIMESTAMP,
     admin BOOLEAN,
-    picture BYTEA
+    image_id INTEGER
 );
 
 CREATE TABLE areas (
@@ -23,7 +28,7 @@ CREATE TABLE threads (
     posted_at TIMESTAMP,
     op_id INTEGER REFERENCES users,
     listed BOOLEAN,
-    picture BYTEA
+    image_id INTEGER
 );
 
 CREATE TABLE messages (
@@ -34,5 +39,5 @@ CREATE TABLE messages (
     user_id INTEGER REFERENCES users,
     posted_at TIMESTAMP,
     listed BOOLEAN,
-    picture BYTEA
+    image_id INTEGER
 );

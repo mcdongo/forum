@@ -1,6 +1,6 @@
-from flask import redirect, render_template, request, session, url_for, abort
+from flask import redirect, render_template, request, session, url_for, abort, make_response
 from app import app
-import users, areas, threads
+import users, areas, threads, imagehandler
 
 @app.route("/")
 def index():
@@ -77,12 +77,19 @@ def newThread():
     message = request.form["message"]
     user_id = session["user_id"]
     area_id = request.form["area_id"]
+    file = request.files["file"]
     if len(topic) > 100 or len(message) > 1000 or len(topic) == 0: 
         return render_template("error.html",message="Invalid topic or message!")
+    
+    if file:
+        img_id = imagehandler.saveImage(file.read(),file)
+        if type(img_id) != int:
+            return render_template("error.html", message=img_id)
+        thread_id = areas.createThread(topic, message, area_id, user_id, img_id)
+    else:
+        thread_id = areas.createThread(topic, message, area_id, user_id)
 
-    thread_id = areas.createThread(topic,message,area_id,user_id)
-
-    return redirect("/area/{0}/{1}".format(area_id,thread_id))
+    return redirect("/area/{0}/{1}".format(area_id, thread_id))
 
 @app.route("/reply", methods=["POST"])
 def replytoThread():
@@ -90,24 +97,33 @@ def replytoThread():
         abort(403)
     if not users.checkCsrfToken(request.form["csrf_token"]):
         abort(403)
-
+    
     message = request.form["message"]
     thread_id = request.form["thread_id"]
     area_id = request.form["area_id"]
     user_id = session["user_id"]
+    file = request.files["file"]
 
     if len(message) > 1000 or len(message) == 0:
         return render_template("error.html",message="Invalid message")
-    threads.saveReply(message,thread_id,area_id,user_id)
-    return redirect("/area/{0}/{1}".format(area_id,thread_id))
+    
+    if file:
+        img_id = imagehandler.saveImage(file.read(),file)
+        if type(img_id) != int:
+            return render_template("error.html", message=img_id)
+        threads.saveReply(message, thread_id, area_id, user_id, img_id)
+    else:
+        threads.saveReply(message, thread_id, area_id, user_id)
+
+    return redirect("/area/{0}/{1}".format(area_id, thread_id))
 
 @app.route("/profile/<int:id>")
 def profile(id):
     if not users.checkIfExists(id):
         abort(404)
     profile_info, stats, message_info, thread_info = users.profileData(id)
-    session["url"] = url_for("profile",id=id)
-    return render_template("profile.html",profile=profile_info,stats=stats,messages=message_info,threads=thread_info)
+    session["url"] = url_for("profile", id=id)
+    return render_template("profile.html", profile=profile_info, stats=stats, messages=message_info, threads=thread_info)
 
 @app.route("/newarea", methods=["POST"])
 def newArea():
@@ -124,13 +140,13 @@ def newArea():
     else:
         abort(403)
 
-@app.route("/result", methods=["GET"])
+@app.route("/result", methods=["GET"]) #Search result
 def result():
     query = request.args["query"]
     if len(query) < 3:
-        return render_template("error.html",message="Search text too short")
+        return render_template("error.html", message="Search text too short")
     threads,messages,profiles = areas.search(query)
-    return render_template("result.html",threads=threads,messages=messages,query=query,profiles=profiles)
+    return render_template("result.html", threads=threads, messages=messages, query=query, profiles=profiles)
 
 @app.route("/editthread/<int:id>", methods=["GET","POST"])
 def editThread(id):
@@ -229,3 +245,26 @@ def editArea(id):
     if listed == "False":
         return redirect("/")
     return redirect(session.get("url","/"))
+
+@app.route("/img/<int:img_id>")
+def serve_img(img_id):
+    if not imagehandler.checkIfListed(img_id):
+        abort(403)
+    data = imagehandler.fetchImage(img_id)
+    response = make_response(bytes(data))
+    response.headers.set("Content-Type","image/jpeg")
+    return response
+
+@app.route("/profilepicture", methods=["POST"])
+def changepicture():
+    file = request.files["file"]
+    id = request.form["id"]
+    if not users.checkCsrfToken(request.form["csrf_token"]):
+        abort(403)
+
+    if file:
+        img_id = imagehandler.saveImage(file.read(),file)
+        if type(img_id) != int:
+            return render_template("error.html", message=img_id)
+        users.setProfilePicture(id,img_id)
+    return redirect(session.get("url"),"/")

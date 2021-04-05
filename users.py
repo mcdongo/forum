@@ -57,7 +57,7 @@ def checkLoggedInStatus():
     return False
 
 def profileData(id):
-    sql = "SELECT u.username, TO_CHAR(u.created_at, 'YYYY-MM-DD HH24:MI:SS') FROM users u WHERE id=:id"
+    sql = "SELECT u.username, TO_CHAR(u.created_at, 'YYYY-MM-DD HH24:MI:SS'), u.image_id, u.id FROM users u WHERE id=:id"
     user_info = db.session.execute(sql, {"id":id}).fetchone()
 
     sql = "SELECT COUNT(m.id) FROM messages m WHERE listed=True AND m.user_id=:id"
@@ -92,3 +92,9 @@ def checkIfExists(id):
 
 def checkCsrfToken(token):
     return session["csrf_token"] == token
+
+def setProfilePicture(user_id, img_id):
+    sql = "UPDATE users SET image_id=:img_id WHERE id=:user_id"
+    result = db.session.execute(sql, {"img_id":img_id, "user_id":user_id})
+    db.session.commit()
+    return True

@@ -3,6 +3,20 @@
 {% block title %}{{ profile[0] }}'s profile{% endblock %}
 {% block content %}
 <h1>{{ profile[0] }}'s profile</h1><br>
+
+{% if profile[2] %}
+<div class="box small"><img src="{{ url_for('serve_img', img_id=profile[2])}}" alt="{{ profile[0] }}'s profile picture"></div>
+{% endif %}
+
+{% if profile[0] == session.username %}
+<form action="/profilepicture" method="POST" enctype="multipart/form-data">
+    Change profile picture<br>
+    <input type="file" name="file"><br>
+    <input type="hidden" name="id" value="{{ profile[3] }}">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+    <input type="submit" value="change">
+</form>
+{% endif %}
 Created at {{ profile[1] }}<hr>
 {% if messages %}
 <h2>{{ profile[0] }} has posted {{ stats[0] }} message(s):</h2><hr>

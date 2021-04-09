@@ -21,10 +21,8 @@ def fetchImage(file_id):
 def saveImage(data,file):
     if not ((file.filename.endswith(".jpg") or file.filename.endswith(".jpeg")) or file.filename.endswith(".png")):
         return "Invalid file type!"
-    print(len(data))
     file = compressImage(file)
     data = file.read()
-    print(len(data))
     if len(data) > 300*1024: #If too large after compression
         return "File size too large"
     

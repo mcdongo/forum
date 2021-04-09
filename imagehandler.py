@@ -53,6 +53,6 @@ def compressImage(file):
         picture = picture.convert('RGB')
 
     picture.save("{}tmp.jpg".format(TMP_FOLDER), optimize=True, quality=30)
-    file = open("{}tmp.jpg".format(TMP_FOLDER), "rb")
+    file = open("{}tmp.jpg".format(TMP_FOLDER), "rb") #Save temporary file to be saved in database
     os.remove("{}tmp.jpg".format(TMP_FOLDER))
     return file

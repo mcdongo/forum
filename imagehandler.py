@@ -1,10 +1,14 @@
 from db import db
+from PIL import Image
+import os
+
+TMP_FOLDER = os.getcwd()+"/tmp/"
 
 def checkImage(file):
     if not file.filename.endswith(".jpg"):
         return "Invalid file type"
     data = file.read()
-    if len(data) > 100*2048:
+    if len(data) > 100*5096:
         return "File size too large"
     return True #image acceptable
 
@@ -15,11 +19,15 @@ def fetchImage(file_id):
     return data
 
 def saveImage(data,file):
-    if not file.filename.endswith(".jpg"):
-        return "Invalid file type"
-    #data = file.read()
-    if len(data) > 100*2048:
+    if not ((file.filename.endswith(".jpg") or file.filename.endswith(".jpeg")) or file.filename.endswith(".png")):
+        return "Invalid file type!"
+    print(len(data))
+    file = compressImage(file)
+    data = file.read()
+    print(len(data))
+    if len(data) > 300*1024: #If too large after compression
         return "File size too large"
+    
     sql = "INSERT INTO images (data, listed) VALUES (:data, True) RETURNING id"
     Id = db.session.execute(sql, {"data":data}).fetchone()[0]
     db.session.commit()
@@ -41,3 +49,12 @@ def removeThreadImages(id_list):
         removeImage(id[0])
     return
         
+def compressImage(file):
+    picture = Image.open(file)
+    if file.filename.endswith(".png"): #Conversion from png to jpg
+        picture = picture.convert('RGB')
+
+    picture.save("{}tmp.jpg".format(TMP_FOLDER), optimize=True, quality=30)
+    file = open("{}tmp.jpg".format(TMP_FOLDER), "rb")
+    os.remove("{}tmp.jpg".format(TMP_FOLDER))
+    return file

@@ -7,13 +7,13 @@
 <h1>{{ info[0] }}</h1>
 {% if info[8] %}
 <nav>
-    <li><div class="box small"><img src="{{ url_for('serve_img', img_id=info[8])}}" alt="User-sent image"></div></li>
+    <li><div class="box small"><a href="/img/{{ info[8] }}"><img src="{{ url_for('serve_img', img_id=info[8])}}" alt="User-sent image">
+    </a></div></li>
     <li>{{ info[1] }}</li>
 </nav>
 {% else %}
 {{ info[1] }}
 {% endif %}
-<br>
 
 
 Posted by <a href="/profile/{{ info[4] }}">{{ info[2] }}</a>, at {{ info[3] }}
@@ -31,12 +31,14 @@ Posted by <a href="/profile/{{ info[4] }}">{{ info[2] }}</a>, at {{ info[3] }}
 
 {% if content[5] %}
 <nav>
-    <li><div class="box small"><img src="{{ url_for('serve_img', img_id=content[5])}}" alt="User-sent image"></div></li> 
+    <li><div class="box small"><a href="/img/{{ content[5] }}"><img src="{{ url_for('serve_img', img_id=content[5])}}" alt="User-sent image">
+    </a></div></li> 
     <li>{{ content[0] }}</li>
 </nav>
 {% else %}
 {{ content[0] }}
 {% endif %}
+
 <hr>
 {% endfor %}
 {% if session.username %}

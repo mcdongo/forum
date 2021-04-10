@@ -9,8 +9,8 @@
     <a href="/img/{{ profile[2] }}"><img src="{{ url_for('serve_img', img_id=profile[2])}}" alt="{{ profile[0] }}'s profile picture"></a>
     {% else %}
     <img src="{{ url_for('static', filename='picture.jpg') }}" alt="{{ profile[0] }}'s profile picture">
-</div>
 {% endif %}
+</div>
 
 {% if profile[0] == session.username %}
 <form action="/profilepicture" method="POST" enctype="multipart/form-data">

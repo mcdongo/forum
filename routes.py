@@ -1,6 +1,7 @@
 from flask import redirect, render_template, request, session, url_for, abort, make_response
 from app import app
 import users, areas, threads, imagehandler
+from os import getcwd
 
 @app.route("/")
 def index():
@@ -249,8 +250,10 @@ def editArea(id):
 @app.route("/img/<int:img_id>")
 def serve_img(img_id):
     if not imagehandler.checkIfListed(img_id):
-        abort(403)
-    data = imagehandler.fetchImage(img_id)
+        file = open(getcwd()+"/static/picture.jpg", "rb")
+        data = file.read()
+    else:
+        data = imagehandler.fetchImage(img_id)
     response = make_response(bytes(data))
     response.headers.set("Content-Type","image/jpeg")
     return response

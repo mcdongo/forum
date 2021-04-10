@@ -4,14 +4,6 @@ import os
 
 TMP_FOLDER = os.getcwd()+"/tmp/"
 
-def checkImage(file):
-    if not file.filename.endswith(".jpg"):
-        return "Invalid file type"
-    data = file.read()
-    if len(data) > 100*5096:
-        return "File size too large"
-    return True #image acceptable
-
 def fetchImage(file_id):
     sql = "SELECT data FROM images WHERE id=:id AND listed=True"
     result = db.session.execute(sql, {"id":file_id})
@@ -25,7 +17,7 @@ def saveImage(data,file):
     data = file.read()
     if len(data) > 300*1024: #If too large after compression
         return "File size too large"
-    
+
     sql = "INSERT INTO images (data, listed) VALUES (:data, True) RETURNING id"
     Id = db.session.execute(sql, {"data":data}).fetchone()[0]
     db.session.commit()
@@ -56,3 +48,8 @@ def compressImage(file):
     file = open("{}tmp.jpg".format(TMP_FOLDER), "rb") #Save temporary file to be saved in database
     os.remove("{}tmp.jpg".format(TMP_FOLDER))
     return file
+
+def getAllImages():
+    sql = "SELECT id FROM images WHERE listed=True"
+    result = db.session.execute(sql).fetchall()
+    return result

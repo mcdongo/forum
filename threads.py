@@ -95,4 +95,16 @@ def deleteMessage(message_id,user_id):
     db.session.commit()
     return True
 
+def messageInflux():
+    sql = """SELECT m.id, m.message, TO_CHAR(m.posted_at, 'YYYY-MM-DD HH24:MI:SS'), m.image_id, m.area_id, m.thread_id, a.id,
+            t.topic, u.username, u.id, a.topic FROM messages m, threads t, users u, areas a WHERE m.listed=True AND t.listed=True
+            AND a.listed=True AND m.user_id=u.id AND t.id=m.thread_id AND m.area_id=a.id ORDER BY m.id DESC"""
+    result = db.session.execute(sql).fetchall()
+    return result
     
+def getAllThreads():
+    sql = """SELECT t.id, t.topic, t.message, TO_CHAR(t.posted_at, 'YYYY-MM-DD HH24:MI:SS'), t.image_id, t.area_id,
+            u.username, u.id, a.topic FROM threads t, users u, areas a WHERE t.listed=True
+            AND a.listed=True AND t.op_id=u.id AND t.area_id=a.id ORDER BY t.id DESC"""
+    result = db.session.execute(sql).fetchall()
+    return result

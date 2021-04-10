@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% block title %}messages{% endblock %}
+{% block content %}
+<h1>All messages</h1>
+<hr>
+{% for content in contents %}
+
+{% if content[3] %}
+<nav>
+    <li><div class="box small"><a href="/img/{{ content[3] }}"><img src="{{ url_for('serve_img', img_id=content[3])}}" alt="User-sent image">
+    </a></div></li>
+    <li>{{ content[1] }}</li>
+</nav>
+{% else %}
+{{ content[1] }}
+{% endif %}
+Posted by <a href="/profile/{{ content[9] }}">{{ content[8] }}</a> at {{ content[2] }} in
+<a href="/area/{{ content[6] }}">{{ content[10] }}</a>/<a href="/area/{{ content[6] }}/{{ content[5] }}">{{ content[7] }}</a>
+{% if session.admin %} <a href="/editmessage/{{ content[0] }}">Edit</a>,
+<a href="/deletemessage/{{ content[6] }}/{{ content[5] }}/{{ content[0] }}" onclick="return confirm('Are you sure?')">Delete</a>{% endif %}
+<hr>
+{% endfor %}
+{% endblock %}

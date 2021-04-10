@@ -25,7 +25,8 @@ Posted by <a href="/profile/{{ info[4] }}">{{ info[2] }}</a>, at {{ info[3] }}
 {% for content in contents %}
 <a href="/profile/{{ content[3] }}">{{ content[1] }}</a> at {{ content[2] }} 
 {% if (session.user_id==content[3] or session.admin) %}
-<a href="/editmessage/{{ content[4] }}">Edit</a>, <a href="/deletemessage/{{ info[5] }}/{{ info[7] }}/{{ content[4] }}">delete</a>
+<a href="/editmessage/{{ content[4] }}">Edit</a>, <a href="/deletemessage/{{ info[5] }}/{{ info[7] }}/{{ content[4] }}"
+onclick="return confirm('Are you sure?')">delete</a>
 {% endif %}
 <br>
 

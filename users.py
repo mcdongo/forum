@@ -98,3 +98,8 @@ def setProfilePicture(user_id, img_id):
     result = db.session.execute(sql, {"img_id":img_id, "user_id":user_id})
     db.session.commit()
     return True
+
+def getAllProfiles():
+    sql = "SELECT u.id, u.username, u.image_id, u.admin FROM users u ORDER BY u.username"
+    result = db.session.execute(sql).fetchall()
+    return result

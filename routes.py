@@ -215,7 +215,7 @@ def deleteMessage(area_id,thread_id,message_id):
     if "user_id" not in session:
         return render_template("error.html", message="You need to log in to delete a message.")
     if threads.deleteMessage(message_id, int(session["user_id"])):
-        return redirect("/area/{0}/{1}".format(area_id, thread_id))
+        return redirect(session.get("url", "/area/{0}/{1}".format(area_id, thread_id)))
     else:
         abort(403)
 
@@ -267,4 +267,33 @@ def changepicture():
         if type(img_id) != int:
             return render_template("error.html", message=img_id)
         users.setProfilePicture(id,img_id)
-    return redirect(session.get("url"),"/")
+    return redirect(session.get("url","/"))
+
+@app.route("/messageinflux")
+def messageinflux():
+    messageinflux = threads.messageInflux()
+    session["url"] = url_for("messageinflux")
+    return render_template("messageinflux.html", contents=messageinflux)
+
+@app.route("/threadinflux")
+def threadinflux():
+    threadinflux = threads.getAllThreads()
+    session["url"] = url_for("threadinflux")
+    return render_template("allthreads.html", contents=threadinflux)
+
+@app.route("/imageinflux")
+def imageinflux():
+    imageinflux = imagehandler.getAllImages()
+    session["url"] = url_for("imageinflux")
+    return render_template("imageinflux.html", contents=imageinflux)
+
+@app.route("/deleteimage/<int:id>")
+def deleteimage(id):
+    imagehandler.removeImage(id)
+    return redirect(session.get("url","/"))
+
+@app.route("/allprofiles")
+def allprofiles():
+    profiles = users.getAllProfiles()
+    session["url"] = url_for("allprofiles")
+    return render_template("allprofiles.html", contents=profiles)

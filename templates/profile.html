@@ -2,10 +2,14 @@
 {% extends "layout.html" %}
 {% block title %}{{ profile[0] }}'s profile{% endblock %}
 {% block content %}
-<h1>{{ profile[0] }}'s profile</h1><br>
+<h1>{{ profile[0] }}'s profile</h1>
 
-{% if profile[2] %}
-<div class="box small"><img src="{{ url_for('serve_img', img_id=profile[2])}}" alt="{{ profile[0] }}'s profile picture"></div>
+<div class="box small">
+    {% if profile[2] %}
+    <a href="/img/{{ profile[2] }}"><img src="{{ url_for('serve_img', img_id=profile[2])}}" alt="{{ profile[0] }}'s profile picture"></a>
+    {% else %}
+    <img src="{{ url_for('static', filename='picture.jpg') }}" alt="{{ profile[0] }}'s profile picture">
+</div>
 {% endif %}
 
 {% if profile[0] == session.username %}

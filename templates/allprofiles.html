@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+{% extends "layout.html" %}
+{% block title %}All profiles{% endblock %}
+{% block content %}
+<h1>All profiles</h1>
+<hr>
+<nav>
+{% for content in contents %}
+    <li>
+        <h3><a href="/profile/{{ content[0] }}">{{ content[1] }}</a>{% if content[3] == True %} (admin) {% endif %}</h3>
+        {% if content[2] %}
+        <div class="box small"><a href="/img/{{ content[2] }}"><img src="{{ url_for('serve_img', img_id=content[2])}}" alt="User-sent image">
+        </a></div>
+        {% else %}
+        <div class="box small"><img src="{{ url_for('static', filename='picture.jpg') }}"></div>
+        {% endif %}
+    </li>
+{% endfor %}
+</nav>
+{% endblock %}

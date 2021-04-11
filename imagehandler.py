@@ -24,9 +24,12 @@ def saveImage(data,file):
     return Id
 
 def checkIfListed(img_id):
-    sql = "SELECT listed FROM images WHERE id=:id"
-    result = db.session.execute(sql, {"id":img_id}).fetchone()[0]
-    return result
+    try:
+        sql = "SELECT listed FROM images WHERE id=:id"
+        result = db.session.execute(sql, {"id":img_id}).fetchone()[0]
+        return result
+    except Exception:
+        return None
 
 def removeImage(img_id):
     sql = "UPDATE images SET listed=False WHERE id=:img_id"

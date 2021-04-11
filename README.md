@@ -26,3 +26,4 @@ Käyttäjillä tulee olla oma profiili lähettääkseen viestejä.
 Sovellus alkaa lähenemään valmista. Kaikki ominaisuudet, jotka sovellukseen suunnittelin on tehty.
 Tällä hetkellä tiedossa ei ole mitään bugeja. Ulkoasua tullaan todennäköisesti vielä parantelemaan ja koodia siistimään.
 Sivustolle tulee luoda käyttäjä lähettääksen viestejä tai aloittaakseen ketjuja. Käyttäjätiliä, jolle on myönnetty ylläpitäjän oikeudet pääsee kokeilemaan tunnuksella <b>admin</b> ja salasanalla <b>admin</b>.
+<a href="http://general-forum.herokuapp.com/">Linkki sivulle</a>

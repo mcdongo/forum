@@ -62,11 +62,11 @@ def getThreads(area_id): #get threads in an area
 def createThread(topic,text,area_id,user_id,img_id=None):
     if img_id:
         sql = """INSERT INTO threads (topic, message, area_id, posted_at, op_id, listed, image_id) VALUES
-                (:topic,:text,:area_id,NOW(),:user_id,True,:image_id) RETURNING id"""
+                (:topic,:text,:area_id, (NOW() + interval '3 hours'),:user_id,True,:image_id) RETURNING id"""
         result = db.session.execute(sql, {"topic":topic,"text":text,"area_id":area_id,"user_id":user_id,"image_id":img_id}).fetchone()[0]
         db.session.commit()
         return result
-    sql = "INSERT INTO threads (topic, message, area_id, posted_at, op_id, listed) VALUES (:topic,:text,:area_id,NOW(),:user_id,True) RETURNING id"
+    sql = "INSERT INTO threads (topic, message, area_id, posted_at, op_id, listed) VALUES (:topic,:text,:area_id,(NOW() + interval '3 hours') ,:user_id,True) RETURNING id"
     result = db.session.execute(sql, {"topic":topic,"text":text,"area_id":area_id,"user_id":user_id}).fetchone()[0]
     db.session.commit()
     return result

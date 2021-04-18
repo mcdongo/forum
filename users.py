@@ -32,7 +32,7 @@ def logout():
 def register(username,password):
     hash_value = generate_password_hash(password)
     try:
-        sql = "INSERT INTO users (username,password,created_at,admin) VALUES (:username,:password,NOW(),False)"
+        sql = "INSERT INTO users (username,password,created_at,admin) VALUES (:username,:password, (NOW() + INTERVAL '3 hours') ,False)"
         db.session.execute(sql, {"username":username,"password":hash_value})
         db.session.commit()
         login(username,password)

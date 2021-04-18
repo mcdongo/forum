@@ -21,13 +21,13 @@ def getAreaName(thread_id):
 def saveReply(message,thread_id,area_id,user_id,img_id=None):
     if img_id == None:
         sql = """INSERT INTO messages (message,thread_id,area_id,user_id,posted_at,listed,image_id) VALUES
-                (:message,:thread_id,:area_id,:user_id,NOW(),True,NULL)"""
+                (:message,:thread_id,:area_id,:user_id, (NOW() + INTERVAL '3 hours') ,True,NULL)"""
         result = db.session.execute(sql,{"message":message,"thread_id":thread_id,"area_id":area_id,"user_id":user_id})
         db.session.commit()
         return True
 
     sql = """INSERT INTO messages (message,thread_id,area_id,user_id,posted_at,listed,image_id) VALUES
-            (:message,:thread_id,:area_id,:user_id,NOW(),True,:image_id)"""
+            (:message,:thread_id,:area_id,:user_id, (NOW() + INTERVAL '3 hours') ,True,:image_id)"""
     result = db.session.execute(sql, {"message":message,"thread_id":thread_id,"area_id":area_id,"user_id":user_id,"image_id":img_id})
     db.session.commit()
     return True

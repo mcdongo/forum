@@ -7,6 +7,7 @@ The site is protected by SQL-injection, XSS and CSRF vulnerabilities. XSS is han
 You can test the site by registering a new account or using one of these existing accounts:<br>
 
 |username|password|admin|
+|--------|--------|-----|
 |user    |user    |False|
 |admin   |admin   |True |
 

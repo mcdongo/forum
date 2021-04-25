@@ -8,8 +8,9 @@ You can test the site by registering a new account or using one of these existin
 
 |username|password|admin|
 |user    |user    |False|
-|admin   |admin   |True |<br>
+|admin   |admin   |True |
 
+<br>
 You can test the moderator's features with the admin account.
 
 <h2>Description and features</h2>

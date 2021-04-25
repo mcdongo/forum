@@ -2,23 +2,25 @@
 {% extends "layout.html" %}
 {% block title %}All threads{% endblock %}
 {% block content %}
-<h1>All threads</h1>
-<hr>
-{% for content in contents %}
-<h2><a href="/area/{{ content[5] }}/{{ content[0] }}">{{ content[1] }}</a></h2>
-{% if content[4] %}
-<nav>
-    <li><div class="box small"><a href="/img/{{ content[4] }}"><img src="{{ url_for('serve_img', img_id=content[4])}}" alt="User-sent image">
-    </a></div></li>
-    <li>{{ content[2] }}</li>
-</nav>
-{% else %}
-{{ content[2] }}
-{% endif %}
-Posted by <a href="/profile/{{ content[7] }}">{{ content[6] }}</a> at {{ content[3] }} in
-<a href="/area/{{ content[5] }}">{{ content[8] }}</a>
-{% if session.admin %} <a href="/editthread/{{ content[0] }}">Edit</a>,
-<a href="/deletethread/{{ content[5] }}/{{ content[0] }}" onclick="return confirm('Are you sure?')">Delete</a>{% endif %}
-<hr>
-{% endfor %}
+    <h1>All threads</h1>
+    <hr>
+    {% for content in contents %}
+        <h2><a href="/area/{{ content[5] }}/{{ content[0] }}">{{ content[1] }}</a></h2>
+        {% if content[4] %}
+            <nav>
+                <li><div class="box small"><a href="/img/{{ content[4] }}"><img src="{{ url_for('serve_img', img_id=content[4])}}" alt="User-sent image">
+                </a></div></li>
+                <li>{{ content[2] }}</li>
+            </nav>
+        {% else %}
+            {{ content[2] }}
+        {% endif %}
+        Posted by <a href="/profile/{{ content[7] }}">{{ content[6] }}</a> at {{ content[3] }} in
+        <a href="/area/{{ content[5] }}">{{ content[8] }}</a>
+        {% if session.admin %}
+            <a href="/editthread/{{ content[0] }}">Edit</a>,
+            <a href="/deletethread/{{ content[5] }}/{{ content[0] }}" onclick="return confirm('Are you sure?')">Delete</a>
+        {% endif %}
+        <hr>
+    {% endfor %}
 {% endblock %}

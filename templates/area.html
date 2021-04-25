@@ -2,38 +2,38 @@
 {% extends "layout.html" %}
 {% block title %}{{ area[1] }}{% endblock %}
 {% block content %}
-<h1>{{ area[1] }}</h1>
-Rules: {{ area[2] }}<br>
-{% if session.username %}
-<hr>
-<form action="/newthread" method="POST" onsubmit="return check(this)" enctype="multipart/form-data">
-Create a thread:<br>
-Topic (max 100 characters):<br>
-<textarea name="topic" rows="1" cols="40"></textarea><br>
-Message (max 1000 characters):<br>
-<textarea name="message" rows="3" cols="40"></textarea>
-<br>
-Image: <input type="file" name="file">
-<input type="submit" value="Create">
-<input type="hidden" name="area_id" value="{{ area[0] }}">
-<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-</form>
-{% else %}
-You need to log in to start a thread!
-{% endif %}
-<hr>
-<h1>Active threads: </h1>
-<hr>
-{% for thread in threads %}
-<a href="/area/{{ thread[2] }}/{{ thread[0] }}">{{ thread[1] }}</a>
-Recent message at {{ thread[5] }}<hr>
-{% endfor %}
-<h1>All threads:</h1>
-{% for content in contents %}
-<h2><a href="/area/{{ area[0] }}/{{ content[0] }}">{{ content[1] }}</a></h2>
-Posted by <a href="/profile/{{ content[4] }}">{{ content[2] }}</a>, at {{ content[3] }}
-<hr>
-{% endfor %}
+    <h1>{{ area[1] }}</h1>
+    Rules: {{ area[2] }}<br>
+    {% if session.username %}
+        <hr>
+        <form action="/newthread" method="POST" onsubmit="return check(this)" enctype="multipart/form-data">
+        Create a thread:<br>
+        Topic (max 100 characters):<br>
+        <textarea name="topic" rows="1" cols="40"></textarea><br>
+        Message (max 1000 characters):<br>
+        <textarea name="message" rows="3" cols="40"></textarea>
+        <br>
+        Image: <input type="file" name="file">
+        <input type="submit" value="Create">
+        <input type="hidden" name="area_id" value="{{ area[0] }}">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+    {% else %}
+        You need to log in to start a thread!
+    {% endif %}
+    <hr>
+    <h1>Active threads: </h1>
+    <hr>
+    {% for thread in threads %}
+        <a href="/area/{{ thread[2] }}/{{ thread[0] }}">{{ thread[1] }}</a>
+        Recent message at {{ thread[5] }}<hr>
+        {% endfor %}
+        <h1>All threads:</h1>
+        {% for content in contents %}
+        <h2><a href="/area/{{ area[0] }}/{{ content[0] }}">{{ content[1] }}</a></h2>
+        Posted by <a href="/profile/{{ content[4] }}">{{ content[2] }}</a>, at {{ content[3] }}
+        <hr>
+    {% endfor %}
 
 <script>
 function check(form) {

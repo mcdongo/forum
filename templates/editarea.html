@@ -2,15 +2,17 @@
 {% extends "layout.html" %}
 {% block title %}Edit area {{ info[1] }}{% endblock %}
 {% block content %}
-{% if session.url %}<a href="{{ session.url }}">Return</a>{% endif %}
-<h1>Edit area "{{ info[1] }}"</h1>
-<form action="/editarea/{{ info[0] }}" method="POST">
-    <textarea name="topic" rows="1" cols="40">{{ info[1] }}</textarea><br>
-    <textarea name="rules" rows="5" cols="40">{{ info[2] }}</textarea><br>
-    Listed: 
-    <input type="radio" name="listed" value="True" checked>Yes
-    <input type="radio" name="listed" value="False">No
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <input type="submit" value="Edit">
-</form>
+    {% if session.url %}
+        <a href="{{ session.url }}">Return</a>
+    {% endif %}
+    <h1>Edit area "{{ info[1] }}"</h1>
+    <form action="/editarea/{{ info[0] }}" method="POST">
+        <textarea name="topic" rows="1" cols="40">{{ info[1] }}</textarea><br>
+        <textarea name="rules" rows="5" cols="40">{{ info[2] }}</textarea><br>
+        Listed: 
+        <input type="radio" name="listed" value="True" checked>Yes
+        <input type="radio" name="listed" value="False">No
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="submit" value="Edit">
+    </form>
 {% endblock %}

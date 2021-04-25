@@ -48,9 +48,23 @@
         display: inline-block;
     }
     
-    h3 {text-align: center;
+    h3 {
+        text-align: center;
         margin-top: 0;
-        margin-bottom: 0;}
+        margin-bottom: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 14ch;
+        white-space: nowrap;
+    }
+
+    h1 {
+        word-wrap: break-word;
+    }
+
+    h2 {
+        word-wrap: break-word;
+    }
 
 </style>
 <head>

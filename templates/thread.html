@@ -2,60 +2,60 @@
 {% extends "layout.html" %}
 {% block title %}{{ info[0] }}{% endblock %}
 {% block content %}
-<body>
-<a href="/area/{{ info[5] }}">{{ info[6] }}</a>
-<h1>{{ info[0] }}</h1>
-{% if info[8] %}
-<nav>
-    <li><div class="box small"><a href="/img/{{ info[8] }}"><img src="{{ url_for('serve_img', img_id=info[8])}}" alt="User-sent image">
-    </a></div></li>
-    <li>{{ info[1] }}</li>
-</nav>
-{% else %}
-{{ info[1] }}
-{% endif %}
+    <body>
+    <a href="/area/{{ info[5] }}">{{ info[6] }}</a>
+    <h1>{{ info[0] }}</h1>
+    {% if info[8] %}
+        <nav>
+            <li><div class="box small"><a href="/img/{{ info[8] }}"><img src="{{ url_for('serve_img', img_id=info[8])}}" alt="User-sent image">
+            </a></div></li>
+            <li>{{ info[1] }}</li>
+        </nav>
+    {% else %}
+        {{ info[1] }}
+    {% endif %}
 
 
-Posted by <a href="/profile/{{ info[4] }}">{{ info[2] }}</a>, at {{ info[3] }}
-{% if (session.user_id==info[4] or session.admin) %}
-<a href="/editthread/{{ info[7] }}">Edit</a>, 
-<a href="/deletethread/{{ info[5] }}/{{ info[7] }}" onclick="return confirm('Are you sure?')">delete</a>
-{% endif %}
-<hr>
-{% for content in contents %}
-<a href="/profile/{{ content[3] }}">{{ content[1] }}</a> at {{ content[2] }} 
-{% if (session.user_id==content[3] or session.admin) %}
-<a href="/editmessage/{{ content[4] }}">Edit</a>, <a href="/deletemessage/{{ info[5] }}/{{ info[7] }}/{{ content[4] }}"
-onclick="return confirm('Are you sure?')">delete</a>
-{% endif %}
-<br>
+    Posted by <a href="/profile/{{ info[4] }}">{{ info[2] }}</a>, at {{ info[3] }}
+    {% if (session.user_id==info[4] or session.admin) %}
+        <a href="/editthread/{{ info[7] }}">Edit</a>, 
+        <a href="/deletethread/{{ info[5] }}/{{ info[7] }}" onclick="return confirm('Are you sure?')">delete</a>
+    {% endif %}
+    <hr>
+    {% for content in contents %}
+        <a href="/profile/{{ content[3] }}">{{ content[1] }}</a> at {{ content[2] }} 
+        {% if (session.user_id==content[3] or session.admin) %}
+            <a href="/editmessage/{{ content[4] }}">Edit</a>, <a href="/deletemessage/{{ info[5] }}/{{ info[7] }}/{{ content[4] }}"
+            onclick="return confirm('Are you sure?')">delete</a>
+        {% endif %}
+        <br>
 
-{% if content[5] %}
-<nav>
-    <li><div class="box small"><a href="/img/{{ content[5] }}"><img src="{{ url_for('serve_img', img_id=content[5])}}" alt="User-sent image">
-    </a></div></li> 
-    <li>{{ content[0] }}</li>
-</nav>
-{% else %}
-{{ content[0] }}
-{% endif %}
+        {% if content[5] %}
+            <nav>
+                <li><div class="box small"><a href="/img/{{ content[5] }}"><img src="{{ url_for('serve_img', img_id=content[5])}}" alt="User-sent image">
+                </a></div></li> 
+                <li>{{ content[0] }}</li>
+            </nav>
+        {% else %}
+            {{ content[0] }}
+        {% endif %}
 
-<hr>
-{% endfor %}
-{% if session.username %}
-<form action="/reply" method="POST" onsubmit="return check(this)" enctype="multipart/form-data">
-    Reply to thread (max 1000 characters): <br>
-    <textarea name="message" rows="5" cols="40"></textarea><br>
-    Image: <input type="file" name="file">
-    <input type="submit" value="Reply">
-    <input type="hidden" name="thread_id" value="{{ thread_id }}">
-    <input type="hidden" name="area_id" value="{{ info[5] }}">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-</form>
-{% else %}
-You need to log in to reply!
-{% endif %}
-</body>
+        <hr>
+    {% endfor %}
+    {% if session.username %}
+        <form action="/reply" method="POST" onsubmit="return check(this)" enctype="multipart/form-data">
+            Reply to thread (max 1000 characters): <br>
+            <textarea name="message" rows="5" cols="40"></textarea><br>
+            Image: <input type="file" name="file">
+            <input type="submit" value="Reply">
+            <input type="hidden" name="thread_id" value="{{ thread_id }}">
+            <input type="hidden" name="area_id" value="{{ info[5] }}">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+    {% else %}
+        You need to log in to reply!
+    {% endif %}
+    </body>
 
 <script>
 function check(form) {

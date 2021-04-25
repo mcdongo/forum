@@ -22,8 +22,8 @@ def fetchAreaValues():
 
     areaValues = []
     for i in range(len(result)):
-        areaValues.append([result[i][0],result[i][1],result[i][2],threads[i][0]])
-    return areaValues,last_message,total_messages,total_threads
+        areaValues.append([result[i][0], result[i][1], result[i][2], threads[i][0]])
+    return areaValues, last_message, total_messages, total_threads
 
 def getActiveThreads(area_id=0):
     if area_id == 0:

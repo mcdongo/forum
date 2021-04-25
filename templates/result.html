@@ -2,37 +2,37 @@
 {% extends "layout.html" %}
 {% block title %}search {{ query }}{% endblock %}
 {% block content %}
-{% if threads %}
-<h1>Thread(s) found:</h1>
-<hr>
-{% for thread in threads %}
-<h2><a href="/area/{{ thread[0] }}/{{ thread[1] }}">{{ thread[2] }}</a></h2><br>
-Posted by: <a href="/profile/{{ thread[6] }}">{{ thread[5] }}</a> at {{ thread[4] }} in <a href="/area/{{ thread[0] }}">{{ thread[7] }}</a><br>
-{{ thread[3] }}
-<hr>
-{% endfor %}
-{% else %}
-<h1>No threads found</h1>
-<hr>
-{% endif %}
-{% if messages %}
-<h1>Message(s) found:</h1>
-<hr>
-{% for message in messages %}
-{{ message[5] }}<br>
-Posted by: <a href="/profile/{{ message[0] }}">{{ message[1] }}</a> at {{ message[6] }} in thread 
-<a href="/area/{{ message[2] }}/{{ message[3] }}">{{ message[7] }}</a> in <a href="/area/{{ message[2] }}">{{ message[4] }}</a><hr>
-{% endfor %}
-{% else %}
-<h1>No messages found</h1>
-<hr>
-{% endif %}
-{% if profiles %}
-<h1>Profile(s) found:</h1><br>
-{% for profile in profiles %}
-<h2><a href="/profile/{{ profile[0] }}">{{ profile[1] }}</a></h2>
-{% endfor %}
-{% else %}
-<h1>No profiles found</h1>
-{% endif %}
+    {% if threads %}
+        <h1>Thread(s) found:</h1>
+        <hr>
+        {% for thread in threads %}
+            <h2><a href="/area/{{ thread[0] }}/{{ thread[1] }}">{{ thread[2] }}</a></h2><br>
+            Posted by: <a href="/profile/{{ thread[6] }}">{{ thread[5] }}</a> at {{ thread[4] }} in <a href="/area/{{ thread[0] }}">{{ thread[7] }}</a><br>
+            {{ thread[3] }}
+            <hr>
+        {% endfor %}
+    {% else %}
+        <h1>No threads found</h1>
+        <hr>
+    {% endif %}
+    {% if messages %}
+        <h1>Message(s) found:</h1>
+        <hr>
+        {% for message in messages %}
+            {{ message[5] }}<br>
+            Posted by: <a href="/profile/{{ message[0] }}">{{ message[1] }}</a> at {{ message[6] }} in thread 
+            <a href="/area/{{ message[2] }}/{{ message[3] }}">{{ message[7] }}</a> in <a href="/area/{{ message[2] }}">{{ message[4] }}</a><hr>
+        {% endfor %}
+    {% else %}
+        <h1>No messages found</h1>
+        <hr>
+    {% endif %}
+    {% if profiles %}
+        <h1>Profile(s) found:</h1><br>
+        {% for profile in profiles %}
+            <h2><a href="/profile/{{ profile[0] }}">{{ profile[1] }}</a></h2>
+        {% endfor %}
+    {% else %}
+        <h1>No profiles found</h1>
+    {% endif %}
 {% endblock %}

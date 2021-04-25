@@ -2,8 +2,8 @@
 {% extends "layout.html" %}
 {% block title %}Error{% endblock %}
 {% block content %}
-{{ message }}
-{% if session.url %}
-<a href="{{ session.url }}">Return</a>
-{% endif %}
+    {{ message }}
+    {% if session.url %}
+        <a href="{{ session.url }}">Return</a>
+    {% endif %}
 {% endblock %}

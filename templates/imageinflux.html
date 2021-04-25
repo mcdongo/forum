@@ -2,15 +2,15 @@
 {% extends "layout.html" %}
 {% block title %}All images{% endblock %}
 {% block content %}
-<h1>All images</h1>
-<hr>
-<nav>
-{% for content in contents %}
-    <li>
-        <div class="box small"><a href="/img/{{ content[0] }}"><img src="{{ url_for('serve_img', img_id=content[0])}}" alt="User-sent image">
-    {% if session.admin %}<h3><a href="/deleteimage/{{ content[0] }}" onclick="return confirm('Are you sure?')">Delete</a></h3>{% endif %}
-        </a></div>
-    </li>
-{% endfor %}
-</nav>
+    <h1>All images</h1>
+    <hr>
+    <nav>
+    {% for content in contents %}
+        <li>
+            <div class="box small"><a href="/img/{{ content[0] }}"><img src="{{ url_for('serve_img', img_id=content[0])}}" alt="User-sent image">
+        {% if session.admin %}<h3><a href="/deleteimage/{{ content[0] }}" onclick="return confirm('Are you sure?')">Delete</a></h3>{% endif %}
+            </a></div>
+        </li>
+    {% endfor %}
+    </nav>
 {% endblock %}

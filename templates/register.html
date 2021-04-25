@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 {% extends "layout.html" %}
 {% block content %}
-<meta name="viewport" content="width=device.width, initial-scale=1">
-<h1>General forum</h1>
-<h2>Account registration</h2>
-<hr>
-{{ value }}
-
-<form action="/register" method="POST">
-    <p>Username:
-    <input type="text" name="username"></p>
-    <p>Password: 
-    <input type="password" name="password"></p>
-    <input type="submit" value="Register and log in">
-</form>
-<a href="{{ next_url }}">Return</a>
+    <meta name="viewport" content="width=device.width, initial-scale=1">
+    <h1>General forum</h1>
+    <h2>Account registration</h2>
+    <hr>
+    {{ value }}
+    
+    <form action="/register" method="POST">
+        <p>Username:
+        <input type="text" name="username"></p>
+        <p>Password: 
+        <input type="password" name="password"></p>
+        <input type="submit" value="Register and log in">
+    </form>
+    <a href="{{ next_url }}">Return</a>
 {% endblock %}

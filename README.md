@@ -1,29 +1,35 @@
-Forum keskustelusovellus
-
-Sovellus on keskustelufoorumi. 
-Sovellus koostuu erilaisista keskustelualueista, jotka sisältävät ketjuja.
-Käyttäjillä tulee olla oma profiili lähettääkseen viestejä.
-
-- Käyttäjä voi luoda oman tilin sekä kirjautua sille
-- Etusivu on jaettu eri keskustelualueisiin
-- Etusivulla näkyy ketjut, joihin on viimeisimmäksi laitettu viestejä
-- Etusivulla näkyy jokaisen alueen ketjujen ja viestien määrä ja viimeksi lähetetyn viestin ajankohta
-- Aluekohtaisilla sivuilla näkyy alueen aktiiviset ketjut
-- Käyttäjä voi luoda ketjuja
-- Ketjuilla on otsikko sekä aloitusviesti, sekä mahdollisesti kuva
-- Sovellus vastaanottaa .jpg ja .png -tyyppisiä kuvia, pakkaa ne itse ja tarvittaessa muuttaa .jpg-muotoon, hyväksyy kuvan vain mikäli sen koko pakkauksen jälkeen on alle 300kt
-- Käyttäjä voi lisätä viestejä valmiiksi tehtyihin ketjuihin
-- Käyttäjä voi muokata luomansa ketjun otsikkoa sekä lähettämänsä viestin sisältöä. Viestin sekä ketjun voi myös poistaa
-- Ylläpitäjä pystyy poistamaan sekä muokkaamaan kaikkia viestejä
-- Käyttäjä voi etsiä kaikki viestit, ketjut ja profiilit joiden osana on annettu sana
-- Ylläpitäjä voi lisätä, poistaa ja muokata jo olemassa olevia keskustelualueita
-- Viestiin voi linkittää kuvia
-- Tiliin voi linkittää profiilikuvan
-- Tilillä on oma profiilisivu, josta näkee käyttäjän lähettämät viestit, käyttäjän profiilikuvan sekä käyttäjän aloittamat ketjut
+<h1>General discussion forum</h1>
 <hr>
+A database project built with Flask and PostgreSQL. Deployed to <a href="http://general-forum.herokuapp.com/">Heroku</a>. In order to post messages or start threads, you need to log in. However you do not need to log in to observe and browse the contents of the site. You can access the login and register pages from every page within the site. These are located in the topside of every page, right below the header. The forum is divided into different discussion areas. Moderators can modify these areas (their rules and topics), remove them and add more of them. Moderators can modify and delete all messages and threads. Users can also delete and modify their own messages and threads. Deleting entries does not actually delete them, it just makes them <i>unlisted</i> so that the app knows not to present that data to anyone.<br>
 
-<h1>Sovelluksen toiminta:</h1>
-Sovellus alkaa lähenemään valmista. Kaikki ominaisuudet, jotka sovellukseen suunnittelin on tehty.
-Tällä hetkellä tiedossa ei ole mitään bugeja. Ulkoasua tullaan todennäköisesti vielä parantelemaan ja koodia siistimään.
-Sivustolle tulee luoda käyttäjä lähettääksen viestejä tai aloittaakseen ketjuja. Käyttäjätiliä, jolle on myönnetty ylläpitäjän oikeudet pääsee kokeilemaan tunnuksella <b>admin</b> ja salasanalla <b>admin</b>.
-<a href="http://general-forum.herokuapp.com/">Linkki sivulle</a>
+The site is protected by SQL-injection, XSS and CSRF vulnerabilities. XSS is handled by Flask's own render_template, CSRF is handled by giving a session-based token in form of cookies and SQL-injection is handled with giving variables as parameters to SQL queries.
+
+<br>
+You can test the site by registering a new account or using one of these existing accounts:<br>
+|username|password|admin|
+|user    |user    |False|
+|admin   |admin   |True |<br>
+You can test the moderator's features with the admin account.
+
+<h2>Description and features</h2>
+<hr>
+- User may register an account and log in to it
+- Front page is divided into several different discussion areas, active threads are also shown here
+- Moderators can create new areas or modify or delete existing ones
+- Areas also show their own active threads and all threads are shown by age (newest first)
+- Users may create threads and post replies into these threads
+- Users can modify or delete their own messages and threads
+- Moderators can modify or delete all messages and threads
+- Moderators can delete all images
+- Messages can include pictures
+- The app only accepts png and jpg images, which are then compressed with Python's Pillow library and does not accept images if their size are over 300kb after compression
+- Users can search for all profiles, threads and messages containing a certain string'
+- A profile page exists for all users which shows the user's possible profile picture and its posted messages and threads.
+- Users can change their profile pictures
+<br>
+<h2>Database schema</h2>
+<hr>
+<img src="/documentation/database-schema.png">
+<h2>The state of the app</h2>
+<hr>
+The app is almost complete. All of the features I planned are created. At the moment there are no known bugs. The layout and GUI will get some changes in order to make the site more "pleasing" to use. 

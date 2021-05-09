@@ -15,7 +15,7 @@ def saveImage(data,file):
         return "Invalid file type!"
     file = compressImage(file)
     data = file.read()
-    if len(data) > 300*1024: #If too large after compression
+    if len(data) > 300*1024:
         return "File size too large"
 
     sql = "INSERT INTO images (data, listed) VALUES (:data, True) RETURNING id"
@@ -44,11 +44,11 @@ def removeThreadImages(id_list):
         
 def compressImage(file):
     picture = Image.open(file)
-    if file.filename.endswith(".png"): #Conversion from png to jpg
+    if file.filename.endswith(".png"):
         picture = picture.convert('RGB')
 
     picture.save("{}tmp.jpg".format(TMP_FOLDER), optimize=True, quality=30)
-    file = open("{}tmp.jpg".format(TMP_FOLDER), "rb") #Save temporary file to be saved in database
+    file = open("{}tmp.jpg".format(TMP_FOLDER), "rb")
     os.remove("{}tmp.jpg".format(TMP_FOLDER))
     return file
 

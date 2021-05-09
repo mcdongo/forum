@@ -3,25 +3,25 @@ from db import db
 from routes import session
 from werkzeug.security import check_password_hash, generate_password_hash
 from os import urandom
-#everything session and account-related
+
 
 def login(username,password):
     hash_value = generate_password_hash(password)
     sql = "SELECT password FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()
-    if user == None: #account does not exist
+    if user == None: 
         return "Account does not exist!"
     else:
         hash_value = user[0]
-        if check_password_hash(hash_value,password): #succesful login
+        if check_password_hash(hash_value,password):
             session["username"] = username
             session["user_id"] = getId(username)
             session["csrf_token"] = urandom(16).hex()
             if getAdmin(int(session["user_id"])):
                 session["admin"] = True
             return 3
-        else: #wrong password
+        else:
             return "Wrong password!"
 
 def logout():

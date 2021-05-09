@@ -20,7 +20,7 @@ def login():
     username = request.form["username"]
     password = request.form["password"]
     status = users.login(username,password)
-    if status != 3: #unsuccesful login
+    if status != 3:
         return render_template("error.html",message=status)
 
     return redirect(session.get("url","/"))
@@ -33,7 +33,7 @@ def logout():
 @app.route("/register", methods=["GET","POST"])
 def register():
     if request.method == "GET":
-        next_url = session.get("url","/")#return to previous page 
+        next_url = session.get("url","/")
         return render_template("register.html",next_url=next_url)
 
     if request.method == "POST":
@@ -69,7 +69,7 @@ def thread(area_id,thread_id):
 
 @app.route("/newthread", methods=["POST"])
 def newThread():
-    if not users.checkLoggedInStatus(): #check if user has logged in -> is allowed to post
+    if not users.checkLoggedInStatus():
         abort(403)
     if not users.checkCsrfToken(request.form["csrf_token"]):
         abort(403)
@@ -94,7 +94,7 @@ def newThread():
 
 @app.route("/reply", methods=["POST"])
 def replytoThread():
-    if not users.checkLoggedInStatus(): #check if user has logged in -> is allowed to post
+    if not users.checkLoggedInStatus():
         abort(403)
     if not users.checkCsrfToken(request.form["csrf_token"]):
         abort(403)
@@ -141,7 +141,7 @@ def newArea():
     else:
         abort(403)
 
-@app.route("/result", methods=["GET"]) #Search result
+@app.route("/result", methods=["GET"])
 def result():
     query = request.args["query"]
     if len(query) < 3:

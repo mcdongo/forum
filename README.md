@@ -1,5 +1,5 @@
 <h1>General discussion forum</h1>
-A database project built with Flask and PostgreSQL. Deployed to <a href="http://general-forum.herokuapp.com/">Heroku</a>. In order to post messages or start threads, you need to log in. However you do not need to log in to observe and browse the contents of the site. You can access the login and register pages from every page within the site. These are located in the topside of every page, right below the header. The forum is divided into different discussion areas. Moderators can modify these areas (their rules and topics), remove them and add more of them. Moderators can modify and delete all messages and threads. Users can also delete and modify their own messages and threads. Deleting entries does not actually delete them, it just makes them <i>unlisted</i> so that the app knows not to present that data to anyone.<br>
+A database project built with Flask and PostgreSQL. Deployed to <a href="https://general-forum.herokuapp.com/">Heroku</a>. In order to post messages or start threads, you need to log in. However you do not need to log in to observe and browse the contents of the site. You can access the login and register pages from every page within the site. These are located in the topside of every page, right below the header. The forum is divided into different discussion areas. Moderators can modify these areas (their rules and topics), remove them and add more of them. Moderators can modify and delete all messages and threads. Users can also delete and modify their own messages and threads. Deleting entries does not actually delete them, it just makes them <i>unlisted</i> so that the app knows not to present that data to anyone.<br>
 
 The site is protected by SQL-injection, XSS and CSRF vulnerabilities. XSS is handled by Flask's own render_template, CSRF is handled by giving a session-based token in form of cookies and SQL-injection is handled with giving variables as parameters to SQL queries.
 
@@ -34,4 +34,5 @@ You can test the moderator's features with the admin account.
 <h2>Database schema</h2>
 <img src="/documentation/database-schema.png">
 <h2>The state of the app</h2>
-The app is almost complete. All of the features I planned are created. At the moment there are no known bugs. The layout and GUI will get some changes in order to make the site more "pleasing" to use. 
+The final version of the app has been deployed to <a href="https://general-forum.herokuapp.com/">heroku</a>.
+
